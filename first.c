@@ -3,7 +3,7 @@
 int main(){
 	char chp[100];
 	start();
-	gets(chp);
+	// gets(chp);
 	index_1(chp);
 }
 
@@ -14,6 +14,11 @@ void start(){
 }
 
 void index_1(char* chp){
-	puts("hello xiaomeng, your sub_string is:");
-	puts(chp);
+	FILE *fin;
+	fin=fopen(FILENAME,"r");
+	char c;
+	while(c=fgetc(fin))
+		putchar(c);
+	// puts("hello xiaomeng, your sub_string is:");
+	// puts(chp);
 }
