@@ -16,7 +16,8 @@ int main(){
 	printf("please input the string: ");
 	//show(head); //初始化成功
 	scanf("%s",str);
-	printf("%d",match_1(head,str));
+	//printf("%d",match_1(head,str));
+	match_1(head,str,0);
 }
 
 void start(){
@@ -51,7 +52,7 @@ void show(node* h){
 	}
 }
 
-long match_1(node* head,char* str){
+long match_1(node* head,char* str,long ppos){
 	int  j=0;
 	long pos=0;
 	node *cur,*pre;
@@ -72,7 +73,9 @@ long match_1(node* head,char* str){
 			
 	}
 	if(j==strlength)
-		return pos;
+		printf("%d\n",pos+ppos);
+	if(cur->next!=NULL)
+		match_1(cur,str,pos+ppos+strlength);
 	else 
 		return 0;
 }
