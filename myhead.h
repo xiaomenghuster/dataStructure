@@ -17,4 +17,4 @@ long match_2(node* head,char* str,long ppos);
 	void get_next(char* , int*);//
 long match_3(node* head,char* str,long ppos);
 	node* movesteps(node *head,int steps);
-long match_4(node* head,char* str);
+long match_4(node* head,char* str,long ppos);
