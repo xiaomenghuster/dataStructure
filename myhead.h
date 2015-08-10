@@ -21,4 +21,5 @@ long match_4(node* head,char* str,long ppos);
 long match_5(node* head,char* str,long ppos);
 	void get_bmgs(char*,int*);
 	void get_bmbc(char*,int*);
-
+long match_6(node* head,char* str,long ppos);
+	void get_b(char*,int*);

@@ -43,6 +43,7 @@ int init(node* head){
 		h=p;
 		//putchar(c);
 	}
+	h->next=NULL;
 } 
 
 void show(node* h){
@@ -62,7 +63,7 @@ void get_next(char* str,int* next){
 			i++;
 			j++;
 			next[i]=j;
-			//printf("%d\n",next[i]);
+			//printf("%d",next[i]);
 		}
 		else 
 			j=next[j];
@@ -70,7 +71,7 @@ void get_next(char* str,int* next){
 }
 
 long match_2(node* head,char* str,long ppos){
-	int  i=0,j=1;
+	int i=0,j=1;
 	long pos=0;  //从当前位置开始计数，然后加上传进来的起始位置ppos
 	node *cur,*pre;
 	cur=head;
@@ -81,6 +82,7 @@ long match_2(node* head,char* str,long ppos){
 	while(str_2[i+1]=str[i])
 		i++;  //依次后移一位
 	get_next(str_2,next);  //得到next函数
+	
 	while(j<=strlength&&cur->next!=NULL){
 		if(j==0||str_2[j]==cur->ch){
 			cur=cur->next;
@@ -92,8 +94,7 @@ long match_2(node* head,char* str,long ppos){
 		}
 	}
 	if(j>strlength)
-		//return pos-strlength;
-		printf("%d\n",pos+ppos-strlength);
+		printf("%ld\n",pos+ppos-strlength);
 	if(cur->next!=NULL)
 		match_2(cur,str,pos+ppos);
 	else
