@@ -44,6 +44,7 @@ int init(node* head){
 		h=p;
 		//putchar(c);
 	}
+	h->next=NULL;
 } 
 
 void show(node* h){
@@ -59,6 +60,7 @@ void show(node* h){
 }
 
 node* movesteps(node* head,int steps){
+	//printf("move %d steps",steps);
 	int i;
 	for(i=0;head!=NULL&&i<steps;i++){
 		head=head->next;
@@ -69,7 +71,7 @@ node* movesteps(node* head,int steps){
 long match_4(node* head,char* str,long ppos){
 	int  i=0,j,k;
 	long pos=1;  //从当前位置开始计数，然后加上传进来的起始位置ppos
-	node *cur;  //last表示匹配上匹配串最后一个字符的位置
+	node *cur;  
 	char c;
 	int strlength=strlen(str);
 	cur = movesteps(head,strlength);//先往后移动一个模式串的长度
@@ -84,7 +86,10 @@ long match_4(node* head,char* str,long ppos){
 			cur = movesteps(cur,i+1);
 			pos++;
 			i=0;
-			while(cur!=NULL&&j>=0&&str[j]!=cur->ch){
+			if(cur==NULL)
+				break;   //到文档末尾则退出
+			j=strlength-1;
+			while(j>=0&&str[j]!=cur->ch){
 				j--;
 			}
 			cur=movesteps(cur,strlength-j-1);
@@ -97,12 +102,6 @@ long match_4(node* head,char* str,long ppos){
 		printf("%d\n",pos+ppos);
 	if(cur!=NULL)
 		match_4(cur->next,str,pos+ppos);
-	else 
+	else
 		return;
-	/*if(j<0)
-		printf("%d\n",pos+ppos);
-	if(cur!=NULL)
-		match_3(cur->next,str,pos+ppos);
-	else 
-		return;*/
 }

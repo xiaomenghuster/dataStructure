@@ -1,6 +1,6 @@
 /*match_5
  *Shift-And/Shift-Or匹配算法
- *
+ *只能处理32个字符以下的模式串
 */
 #include <stdio.h>
 #include "myhead.h"
@@ -91,22 +91,22 @@ long match_6(node* head,char* str,long ppos){
 	long pos=1;  //从当前位置开始计数，然后加上传进来的起始位置ppos
 	int strlength=strlen(str);
 	unsigned long D=0,mask;
-	mask = 1<<strlength-1;
+	mask = 1<<(strlength-1);
 	node* cur=head->next;
 	get_b(str,B);
 	while(cur!=NULL){
 		D=(D<<1|1)&B[cur->ch];
 		//printf("%x\n",D);
+		cur=cur->next;
 		pos++;
 		if(D&mask)
 			break;
-		cur=cur->next;
 	}
 	if(D&mask)
 		printf("%d\n",pos+ppos-strlength);
 		//printf("find");
 	if(cur!=NULL)
-		match_6(cur,str,pos+ppos-1);
+		match_6(cur,str,pos+ppos);
 	else 
 		return;
 	
