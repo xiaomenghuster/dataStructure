@@ -71,7 +71,7 @@ void display(node* head,char* str){
 	match_1(head,str,0);
 	puts("");					//换行
 	printf("%s","KMP\t\t| ");
-	//match_2(head,str,0);
+	match_2(head,str,0);
 	puts("");
 	printf("%s","Horspool\t| ");
 	match_3(head,str,0);
@@ -125,8 +125,6 @@ long match_1(node* head,char* str,long ppos){
 }
 
 void get_next(char* str,int* next){
-	//puts("in get_next");
-	//puts(str);
 	int i=1,j=0;
 	next[1]=0;
 	int strlength = strlen(str)-1;//第一个确定为0
@@ -135,22 +133,14 @@ void get_next(char* str,int* next){
 			i++;
 			j++;
 			next[i]=j;
+			//printf("%d",next[i]);
 		}
 		else 
 			j=next[j];
 	}
-	int k;
-	/* for(k=1;k<=strlength;k++){
-		printf("%3d",next[k]);
-	}
-	puts(""); */
 }
 
-/* name:KMP 
- * 需要子函数：get_next
- */
 long match_2(node* head,char* str,long ppos){
-	//puts(str);
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int i=0,j=1;
@@ -158,11 +148,15 @@ long match_2(node* head,char* str,long ppos){
 	node *cur,*pre;
 	cur=head;
 	pre=head;
-	int strlength=str[0];
+	int strlength=strlen(str);
+	char str_2[strlength+2]; //考虑结束标志，所以加二
 	int next[strlength+1];
-	get_next(str,next);  //得到next函数
+	while(str_2[i+1]=str[i])
+		i++;  //依次后移一位
+	get_next(str_2,next);  //得到next函数
+	
 	while(j<=strlength&&cur->next!=NULL){
-		if(j==0||str[j]==cur->ch){
+		if(j==0||str_2[j]==cur->ch){
 			cur=cur->next;
 			pos++;
 			j++;
@@ -178,10 +172,6 @@ long match_2(node* head,char* str,long ppos){
 	gettimeofday(&end,NULL);
 	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
 	printf("%f",timeuse/1000000.0);
-/* 	if(cur->next!=NULL)
-		match_2(cur,str,pos+ppos);
-	return;
- */	
 }
 
 
@@ -313,6 +303,10 @@ long match_6(node* head,char* str,long ppos){
 	int B[128]={0};
 	long pos=1;  //从当前位置开始计数，然后加上传进来的起始位置ppos
 	int strlength=strlen(str);
+	if(strlength>32){
+		printf("  over length!");
+		return;
+	}
 	long long D=0,mask;
 	mask = 1<<(strlength-1);
 	node* cur=head->next;

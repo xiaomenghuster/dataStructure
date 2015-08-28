@@ -1,5 +1,5 @@
 /*match_5
- *Horspool匹配算法
+ *BoyerMoore匹配算法
  *
 */
 #include <stdio.h>
@@ -16,13 +16,13 @@ int main(){
 	printf("please input the string: ");
 	//show(head); //初始化成功
 	scanf("%s",str);
-	match_3(head,str,0);
+	match_5(head,str,0);
 	
 }
 
 void start(){
 	printf("------------------------------------------\n");
-	printf("| This the string-match_3 algorithm!     |\n");
+	printf("| This the string-match_5 algorithm!     |\n");
 	printf("------------------------------------------\n");
 }
 

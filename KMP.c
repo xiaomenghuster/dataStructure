@@ -7,8 +7,7 @@
 #include<stdlib.h>
 #include<string.h>
 int main(){
-	int i=0;
-	char str_pre[100],str[100];
+	char str[100];
 	node *head,*p;
 	start();
 	if(!(head=(node*)malloc(sizeof(node))))
@@ -16,11 +15,10 @@ int main(){
 	init(head);
 	printf("please input the string: ");
 	//show(head); //初始化成功
-	scanf("%s",str_pre);
-	while(str[i+1]=str_pre[i])
-		i++;  //依次后移一位
-	str[0]=strlen(str_pre);
+	scanf("%s",str);
+	//printf("%d",match_2(head,str));
 	match_2(head,str,0);
+	
 }
 
 void start(){
@@ -57,8 +55,6 @@ void show(node* h){
 }
 
 void get_next(char* str,int* next){
-	//puts("in get_next");
-	//puts(str);
 	int i=1,j=0;
 	next[1]=0;
 	int strlength = strlen(str)-1;//第一个确定为0
@@ -67,29 +63,28 @@ void get_next(char* str,int* next){
 			i++;
 			j++;
 			next[i]=j;
+			//printf("%d",next[i]);
 		}
 		else 
 			j=next[j];
 	}
-	int k;
-	/* for(k=1;k<=strlength;k++){
-		printf("%3d",next[k]);
-	}
-	puts(""); */
 }
 
 long match_2(node* head,char* str,long ppos){
-	//puts(str);
 	int i=0,j=1;
 	long pos=0;  //从当前位置开始计数，然后加上传进来的起始位置ppos
 	node *cur,*pre;
 	cur=head;
 	pre=head;
-	int strlength=str[0];
+	int strlength=strlen(str);
+	char str_2[strlength+2]; //考虑结束标志，所以加二
 	int next[strlength+1];
-	get_next(str,next);  //得到next函数
+	while(str_2[i+1]=str[i])
+		i++;  //依次后移一位
+	get_next(str_2,next);  //得到next函数
+	
 	while(j<=strlength&&cur->next!=NULL){
-		if(j==0||str[j]==cur->ch){
+		if(j==0||str_2[j]==cur->ch){
 			cur=cur->next;
 			pos++;
 			j++;
@@ -102,6 +97,7 @@ long match_2(node* head,char* str,long ppos){
 		printf("%ld\n",pos+ppos-strlength);
 	if(cur->next!=NULL)
 		match_2(cur,str,pos+ppos);
-	return;
+	else
+		return 0;
 	
 }

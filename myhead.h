@@ -30,4 +30,4 @@ long match_5(node* head,char* str,long ppos);
 	void get_bmgs(char*,int*);
 	void get_bmbc(char*,int*);
 long match_6(node* head,char* str,long ppos);
-	void get_b(char*,long long*);
+	void get_b(char*,int*);
