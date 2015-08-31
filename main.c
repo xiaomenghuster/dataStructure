@@ -81,6 +81,9 @@ void display(node* head,char* str){
 	printf("%s","Sunday\t\t| ");
 	match_4(head,str,0);
 	puts("");
+	printf("%s", "BoyerMoore\t| ");
+	match_5(head,str,0);
+	puts("");
 	printf("%s","Shift-And\t| ");
 	match_6(head,str,0);
 	puts("");
@@ -151,7 +154,7 @@ void get_next(char* str,int* next){
 }
 
 
-//
+//KMP算法
 long match_2(node* head,char* str,long ppos){
 	// puts(str);
 	struct timeval start,end;
@@ -301,6 +304,120 @@ long match_4(node* head,char* str,long ppos){
 	else
 		return; */
 }
+
+
+void get_bmbc(char* str,int* bmbc){
+	int i;
+	char c;
+	int strlength = strlen(str);
+	for(i=0;i<128;i++){
+		bmbc[i]=strlength;
+	}
+	for(i=0;i<strlength;i++){
+		c=str[i];
+		bmbc[c]=strlength-i;
+		// printf("[%c]%d\n", c,bmbc[c]);
+	}
+}
+
+void get_bmgs(char* str,int* bmgs){
+	int i,j,p;
+	int strlength = strlen(str);
+	int suff[strlength];
+	suff[strlength-1]=strlength;
+	for(i=strlength-2;i>=0;i--){
+		p=i;
+		while(p>=0&&str[p]==str[strlength-1-i+p]){
+			p--;
+		}
+		suff[i]=i-p;
+	}
+	// puts("suff:");
+	/*for(i=0;i<strlength;i++){
+		printf("suff[%d]%d\n", i,suff[i]);
+	}*/
+	//计算bmgs[]
+	// puts("bmgs:");
+	for(j=0;j<strlength;j++){
+		bmgs[j]=strlength-1;		
+	}
+	for(j=0;j<strlength-1;j++){
+		bmgs[strlength-1-suff[j]]=strlength-1-j;		
+		//printf("[%d]%d\n",strlength-1-suff[j],strlength-1-j );
+	}
+}
+
+//比较两个数的大小，返回较大的那个数
+int max(int a,int b){
+	return a>b?a:b;
+}
+
+/*
+ *BoyerMoore 算法
+ *需要函数：get_bmgs(),get_bmbc(),max();
+ */
+long match_5(node* head,char* str,long ppos){
+	struct timeval start,end;
+	gettimeofday(&start,NULL);
+	int  i=0,j,k;
+	long pos=1;  //从当前位置开始计数，然后加上传进来的起始位置ppos
+	node *cur;  //last表示匹配上匹配串最后一个字符的位置
+	char c;
+	int strlength=strlen(str);
+	// printf("%d\n",strlength );
+	int bmbc[128];
+/*	for(k=0;k<128;k++){
+		printf("%d",bmbc[k] );
+	}*/
+	int bmgs[strlength];
+	get_bmbc(str,bmbc);
+	get_bmgs(str,bmgs);
+	/*for(i=0;i<strlength;i++){
+		printf("%c%d ",str[i],bmbc[str[i]] );
+	}
+	puts(" ");
+	for(i=0;i<strlength;i++){
+		printf("%3d",bmgs[i] );
+	}*/
+
+	//先往后移动一个模式串的长度
+	cur = movesteps(head,strlength);
+	if(cur==NULL)
+		return;
+	j=strlength-1;  //最后一个字符
+	while(j>=0){
+		//puts("start while");
+		if(str[j]==cur->ch){
+			cur=cur->pre;
+			i++;
+			//pos++;
+			j--;
+		}
+		else{
+			c=cur->ch;
+			i+=max(bmbc[str[j]],bmgs[j]);
+			pos+=max(bmbc[str[j]],bmgs[j]);
+			// printf("i=%d\n",i );
+			cur=movesteps(cur,i);
+			if(cur==NULL){
+				break;
+			}
+			// putchar(cur->ch);
+			i=0;
+			j=strlength-1;
+		}
+	}
+	if(j<0)
+		printf("   %d / ",pos+ppos);
+	else 
+		printf("no found! / ");
+	gettimeofday(&end,NULL);
+	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
+	printf("%f",timeuse/1000000.0);
+		//printf("find");
+}
+
+
 
 
 void get_b(char* str,int* B){
