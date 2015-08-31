@@ -2,6 +2,7 @@
 #define ERROR  -1
 #define TRUE 1
 #define FALSE 0
+
 typedef struct node{
 	char ch;
 	struct node *next;
@@ -29,5 +30,6 @@ long match_4(node* head,char* str,long ppos);
 long match_5(node* head,char* str,long ppos);
 	void get_bmgs(char*,int*);
 	void get_bmbc(char*,int*);
+	int max(int ,int );
 long match_6(node* head,char* str,long ppos);
 	void get_b(char*,int*);

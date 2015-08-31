@@ -1,6 +1,6 @@
 /*
- *字符串匹配算法
- *Main函数
+ *鑴宠劙璺病楹撳簮鑴濇ゼ鑴滅洸鑴ｈ尗璺瘬
+ *Main娼炵倝鑴㈠獟
  *
 */
 #include <stdio.h>
@@ -17,7 +17,7 @@ int main(){
 	init(head);
 	while(1){
 		printf("please input the string: \n");
-		//show(head); //初始化成功
+		//show(head); //椴佺帿鑴㈠綍绂勭倝椴佽劇楣垮▌
 		scanf("%s",str);
 		display(head,str);
 		puts("");
@@ -43,12 +43,13 @@ int init(node* head){
 		c=fgetc(fin);
 		if(!(p=(node*)malloc(sizeof(node))))
 			return ERROR;
-		p->ch=c;
+		p->ch=c; 
 		h->next=p;
-		p->pre=h;  //需要能够双向链表
+		p->pre=h;  //鑴ㄧ尗鑴檵鑴涜労楣跨鑴ｈ姦鑴ц矊鑴曢簱鍗ら搯
 		h=p;
 		//putchar(c);
 	}
+	h->next=NULL;
 } 
 
 void show(node* h){
@@ -64,12 +65,13 @@ void show(node* h){
 }
 
 void display(node* head,char* str){
-	puts("finding end");
+	puts(" ");
+	puts("finding results:");
 	puts("algorithm\t|   place / time(s)");
 	puts("-------------------------------------");
 	printf("%s","Brute Force\t| ");
 	match_1(head,str,0);
-	puts("");					//换行
+	puts("");					//绂勭鑴ㄨ劏
 	printf("%s","KMP\t\t| ");
 	match_2(head,str,0);
 	puts("");
@@ -85,11 +87,11 @@ void display(node* head,char* str){
 }
 
 /* name:Brute Force 
- * 需要子函数：无
+ * 鑴ㄧ尗鑴檵鑴宠劔娼炵倝鑴㈠獟鎷㈡綖鑴﹁劶
  */
 
 long match_1(node* head,char* str,long ppos){
-	//计时
+	//褰曡劃鑴㈠崵
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int  j=0;
@@ -98,6 +100,10 @@ long match_1(node* head,char* str,long ppos){
 	cur=head;
 	pre=head;
 	int strlength=strlen(str);
+	if(strlength>1000){
+		printf("  over length!");
+		return;
+	}
 	while(j<strlength&&cur->next!=NULL){
 		if(str[j]==cur->ch){
 			cur=cur->next;
@@ -118,51 +124,61 @@ long match_1(node* head,char* str,long ppos){
 	gettimeofday(&end,NULL);
 	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
 	printf("%f",timeuse/1000000.0);
-	/* if(cur->next!=NULL)
-		match_1(cur,str,pos+ppos+strlength);
-	else 
-		return 0; */
 }
 
 void get_next(char* str,int* next){
-	int i=1,j=0;
+	// puts(str);
+	int i=1,j=0,k=0;
 	next[1]=0;
-	int strlength = strlen(str)-1;//第一个确定为0
+	int strlength = strlen(str);//纰岃劮鑴璧傛灇鑴犺矾闇茬瘬鑴﹂檵0
+	char str_2[strlength+2]; //椹村綍鑴楄劅闄嗚癌鑴㈤叾鍗ら敋鑴版埉鎷㈠崲鑴ｉ湁鑴劖褰曡劔闇查晛
+	while(str_2[k+1]=str[k]){
+		// putchar(str[k]);
+		k++;
+	}
+	// puts(" ");
 	while(i<strlength){
-		if(j==0||str[i]==str[j]){
+		if(j==0||str_2[i]==str_2[j]){
 			i++;
 			j++;
 			next[i]=j;
-			//printf("%d",next[i]);
+			// printf("%d ",next[i]);
 		}
 		else 
 			j=next[j];
 	}
+	// puts(" ");
 }
 
+
+//
 long match_2(node* head,char* str,long ppos){
+	// puts(str);
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int i=0,j=1;
-	long pos=0;  //从当前位置开始计数，然后加上传进来的起始位置ppos
+	long pos=0;  //楹撹劔纰屽崵鑴熸幊鑴︾鑴拌剻椹撮檵鑴㈠綍褰曡劃鑴㈠獟鎷㈠崲鑴犵娼炶锤褰曡劔鑴¤劎楹撹姦闄嗛叾鑴岄簱纰岃剾鑴濆啋鑴㈠綍鑴︾鑴拌剻ppos
 	node *cur,*pre;
 	cur=head;
 	pre=head;
 	int strlength=strlen(str);
-	char str_2[strlength+2]; //考虑结束标志，所以加二
 	int next[strlength+1];
-	while(str_2[i+1]=str[i])
-		i++;  //依次后移一位
-	get_next(str_2,next);  //得到next函数
+	/* char str_2[strlength+2]; //椹村綍鑴楄劅闄嗚癌鑴㈤叾鍗ら敋鑴版埉鎷㈠崲鑴ｉ湁鑴劖褰曡劔闇查晛
+	while(str_2[i+1]=str[i]){
+		i++;
+		putchar(str_2[i]);
+	}
+	 */
 	
+	get_next(str,next);  //纰岃剻纰岄檰next娼炵倝鑴㈠獟
 	while(j<=strlength&&cur->next!=NULL){
-		if(j==0||str_2[j]==cur->ch){
+		if(j==0||str[j-1]==cur->ch){
 			cur=cur->next;
 			pos++;
 			j++;
 		}
 		else{
-			j=next[j];
+			j=next[j]; //bug:next鑴㈠獟鑴宠寘鑴欑鑴劏鑴獟鑴犺矾鑴＄叅椴佽劇
 		}
 	}
 	if(j>strlength)
@@ -184,19 +200,23 @@ node* movesteps(node* head,int steps){
 }
 
 /* name:Horspool 
- * 需要子函数：movesteps
+ * 鑴ㄧ尗鑴檵鑴宠劔娼炵倝鑴㈠獟鎷㈡綖movesteps
  */
 long match_3(node* head,char* str,long ppos){
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int  i=0,j,k;
-	long pos=1;  //从当前位置开始计数，然后加上传进来的起始位置ppos
-	node *cur,*last;  //last表示匹配上匹配串最后一个字符的位置
+	long pos=1;  //楹撹劔纰屽崵鑴熸幊鑴︾鑴拌剻椹撮檵鑴㈠綍褰曡劃鑴㈠獟鎷㈠崲鑴犵娼炶锤褰曡劔鑴¤劎楹撹姦闄嗛叾鑴岄簱纰岃剾鑴濆啋鑴㈠綍鑴︾鑴拌剻ppos
+	node *cur,*last;  //last鍗ら搯鑴㈡埉鑴濇ゼ鑴滅洸鑴¤劎鑴濇ゼ鑴滅洸楹撳簮鑴冲嵂娼炶锤鑴璧傛灇鑴宠劙璺病纰岃剾鑴︾鑴拌剻
 	char c;
 	int strlength=strlen(str);
-	//先往后移动一个模式串的长度
+	if(strlength>1000){
+		printf("  over length!");
+		return;
+	}
+	//鑴ц劆鑴ラ湁娼炶锤鑴劃闇茬倝鑴璧傛灇鑴涙嫝鑴㈤檰楹撳簮纰岃剾椴侀檱闇茶劆
 	cur = movesteps(head,strlength);
-	j=strlength-1;  //最后一个字符
+	j=strlength-1;  //鑴冲嵂娼炶锤鑴璧傛灇鑴宠劙璺病
 	while(j>=0&&cur!=NULL){
 		if(str[j]==cur->ch){
 			cur=cur->pre;
@@ -208,7 +228,7 @@ long match_3(node* head,char* str,long ppos){
 			c=cur->ch;
 			while(j>=0&&str[j]!=c&&cur!=NULL){
 				cur=cur->next;
-				pos++;  //记录位置
+				pos++;  //褰曡劅鑴楀綍鑴︾鑴拌剻
 				j--;
 			}
 			cur = movesteps(cur,i);
@@ -230,19 +250,23 @@ long match_3(node* head,char* str,long ppos){
 }
 
 /* name:Sunday
- * 需要子函数：movesteps
+ * 鑴ㄧ尗鑴檵鑴宠劔娼炵倝鑴㈠獟鎷㈡綖movesteps
  */
 
 long match_4(node* head,char* str,long ppos){
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int  i=0,j,k;
-	long pos=1;  //从当前位置开始计数，然后加上传进来的起始位置ppos
+	long pos=1;  //楹撹劔纰屽崵鑴熸幊鑴︾鑴拌剻椹撮檵鑴㈠綍褰曡劃鑴㈠獟鎷㈠崲鑴犵娼炶锤褰曡劔鑴¤劎楹撹姦闄嗛叾鑴岄簱纰岃剾鑴濆啋鑴㈠綍鑴︾鑴拌剻ppos
 	node *cur;  
 	char c;
 	int strlength=strlen(str);
-	cur = movesteps(head,strlength);//先往后移动一个模式串的长度
-	j=strlength-1;  //定位到最后一个字符
+	if(strlength>1000){
+		printf("  over length!");
+		return;
+	}
+	cur = movesteps(head,strlength);//鑴ц劆鑴ラ湁娼炶锤鑴劃闇茬倝鑴璧傛灇鑴涙嫝鑴㈤檰楹撳簮纰岃剾椴侀檱闇茶劆
+	j=strlength-1;  //闇茬瘬鑴︾纰岄檰鑴冲嵂娼炶锤鑴璧傛灇鑴宠劙璺病
 	while(j>=0&&cur!=NULL){
 		if(str[j]==cur->ch){
 			cur=cur->pre;
@@ -254,7 +278,7 @@ long match_4(node* head,char* str,long ppos){
 			pos++;
 			i=0;
 			if(cur==NULL)
-				break;   //到文档末尾则退出
+				break;   //纰岄檰鑴﹁剾纰岀鑴涙紡鑴﹁檹鑴矊鑴ヨ劊椴佹灇
 			j=strlength-1;
 			while(j>=0&&str[j]!=cur->ch){
 				j--;
@@ -294,14 +318,14 @@ void get_b(char* str,int* B){
 }
 
 /* name:Shift-And
- * 需要子函数：get_b
+ * 鑴ㄧ尗鑴檵鑴宠劔娼炵倝鑴㈠獟鎷㈡綖get_b
  */
 long match_6(node* head,char* str,long ppos){
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int i;
 	int B[128]={0};
-	long pos=1;  //从当前位置开始计数，然后加上传进来的起始位置ppos
+	long pos=1;  //楹撹劔纰屽崵鑴熸幊鑴︾鑴拌剻椹撮檵鑴㈠綍褰曡劃鑴㈠獟鎷㈠崲鑴犵娼炶锤褰曡劔鑴¤劎楹撹姦闄嗛叾鑴岄簱纰岃剾鑴濆啋鑴㈠綍鑴︾鑴拌剻ppos
 	int strlength=strlen(str);
 	if(strlength>32){
 		printf("  over length!");
