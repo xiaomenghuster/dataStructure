@@ -1,7 +1,8 @@
-/*
- *脳脰路没麓庐脝楼脜盲脣茫路篓
- *Main潞炉脢媒
- *
+/*writor:xiaomenghuster  date:summer
+ *数据结构课程设计
+ *五种字符串匹配算法
+ *寻找到第一个匹配的字符串位置，没有则输出no find!
+ *shift and 只能寻找32个字符以内的字符串，其他的最多为1000
 */
 #include <stdio.h>
 #include "myhead.h"
@@ -9,17 +10,17 @@
 #include<string.h>
 #include<time.h>
 int main(){
-	char str[1000];
+	char str[1000];  //最多可以传入1000个字符，但是其中Shift-And算法最多只能处理32个字符
 	node *head,*p;
-	start();
+	start();  //输出程序提示信息
 	if(!(head=(node*)malloc(sizeof(node))))
 		return ERROR;
-	init(head);
+	init(head);//读取文件内容，初始化链表
 	while(1){
 		printf("please input the string: \n");
-		//show(head); //鲁玫脢录禄炉鲁脡鹿娄
+		//show(head); //检查双向链表时候正确建立
 		scanf("%s",str);
-		display(head,str);
+		display(head,str);  //调用匹配函数并输出结果
 		puts("");
 	}
 	
@@ -45,7 +46,7 @@ int init(node* head){
 			return ERROR;
 		p->ch=c; 
 		h->next=p;
-		p->pre=h;  //脨猫脪陋脛脺鹿禄脣芦脧貌脕麓卤铆
+		p->pre=h;  //个别匹配算法需要双向链表
 		h=p;
 		//putchar(c);
 	}
@@ -71,7 +72,7 @@ void display(node* head,char* str){
 	puts("-------------------------------------");
 	printf("%s","Brute Force\t| ");
 	match_1(head,str,0);
-	puts("");					//禄禄脨脨
+	puts("");					//换行
 	printf("%s","KMP\t\t| ");
 	match_2(head,str,0);
 	puts("");
@@ -90,14 +91,13 @@ void display(node* head,char* str){
 }
 
 /* name:Brute Force 
- * 脨猫脪陋脳脫潞炉脢媒拢潞脦脼
+ * 没有依赖函数
  */
 
 long match_1(node* head,char* str,long ppos){
-	//录脝脢卤
 	struct timeval start,end;
-	gettimeofday(&start,NULL);
-	int  j=0;
+	gettimeofday(&start,NULL);  //得到开始时间
+  	int  j=0;
 	long pos=0;
 	node *cur,*pre;
 	cur=head;
@@ -113,10 +113,10 @@ long match_1(node* head,char* str,long ppos){
 			j++;
 		}
 		else{
-			j=0;
+			j=0;  //模式串回到第一个地府
 			pos++;
-			cur=pre->next;
-			pre=cur;
+			cur=pre->next;  //匹配串后退一个字符，继续进行比较
+			pre=cur;  //保存当前位置
 		}
 			
 	}
@@ -124,8 +124,8 @@ long match_1(node* head,char* str,long ppos){
 		printf("  %d / ",pos+ppos);
 	else 
 		printf("no found! / ");
-	gettimeofday(&end,NULL);
-	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
+	gettimeofday(&end,NULL);  //得到结束时间
+	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;  //计算经过的时间
 	printf("%f",timeuse/1000000.0);
 }
 
@@ -133,13 +133,12 @@ void get_next(char* str,int* next){
 	// puts(str);
 	int i=1,j=0,k=0;
 	next[1]=0;
-	int strlength = strlen(str);//碌脷脪禄赂枚脠路露篓脦陋0
-	char str_2[strlength+2]; //驴录脗脟陆谩脢酶卤锚脰戮拢卢脣霉脪脭录脫露镁
-	while(str_2[k+1]=str[k]){
+	int strlength = strlen(str);//得到字符串的长度
+	char str_2[strlength+2]; //需要依次后移一位，并且考虑结束符，所以长度是srelentgth+2
+	while(str_2[k+1]=str[k]){  //依次后移
 		// putchar(str[k]);
 		k++;
 	}
-	// puts(" ");
 	while(i<strlength){
 		if(j==0||str_2[i]==str_2[j]){
 			i++;
@@ -149,42 +148,38 @@ void get_next(char* str,int* next){
 		}
 		else 
 			j=next[j];
-	}
-	// puts(" ");
+	}  //得到next数组
 }
 
 
-//KMP算法
+/*
+ *KMP算法
+ *依赖函数：get_next();
+*/
 long match_2(node* head,char* str,long ppos){
 	// puts(str);
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int i=0,j=1;
-	long pos=0;  //麓脫碌卤脟掳脦禄脰脙驴陋脢录录脝脢媒拢卢脠禄潞贸录脫脡脧麓芦陆酶脌麓碌脛脝冒脢录脦禄脰脙ppos
+	long pos=0;  //记录累计移动的距离，加上传进来的参数ppos，就是模式串在匹配串中的位置
 	node *cur,*pre;
 	cur=head;
 	pre=head;
 	int strlength=strlen(str);
 	int next[strlength+1];
-	/* char str_2[strlength+2]; //驴录脗脟陆谩脢酶卤锚脰戮拢卢脣霉脪脭录脫露镁
-	while(str_2[i+1]=str[i]){
-		i++;
-		putchar(str_2[i]);
-	}
-	 */
 	
-	get_next(str,next);  //碌脙碌陆next潞炉脢媒
-	while(j<=strlength&&cur->next!=NULL){
-		if(j==0||str[j-1]==cur->ch){
-			cur=cur->next;
+	get_next(str,next);  //得到next数组
+	while(j<=strlength&&cur->next!=NULL){  //开始匹配
+		if(j==0||str[j-1]==cur->ch){ 
+			cur=cur->next;		//如果相等，模式串和匹配串同时后移，进行下一个字符的匹配
 			pos++;
 			j++;
 		}
 		else{
-			j=next[j]; //bug:next脢媒脳茅脙禄脫脨脮媒脠路脡煤鲁脡
+			j=next[j];  //如果不相登，就通过next数组得到此时匹配串的那个字符应该和模式串中的哪个进行匹配
 		}
 	}
-	if(j>strlength)
+	if(j>strlength)     //匹配成功则j>strlength,然后输出模式串在匹配串中的位置
 		printf("  %d / ",pos+ppos-strlength);
 	else 
 		printf("no found! / ");
@@ -193,7 +188,11 @@ long match_2(node* head,char* str,long ppos){
 	printf("%f",timeuse/1000000.0);
 }
 
-
+/*
+ *movesteps()
+ *移动链表指针，距离由参数传入
+ *
+*/
 node* movesteps(node* head,int steps){
 	int i;
 	for(i=0;head!=NULL&&i<steps;i++){
@@ -203,44 +202,43 @@ node* movesteps(node* head,int steps){
 }
 
 /* name:Horspool 
- * 脨猫脪陋脳脫潞炉脢媒拢潞movesteps
+ * 依赖函数：movesteps();
  */
 long match_3(node* head,char* str,long ppos){
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int  i=0,j,k;
-	long pos=1;  //麓脫碌卤脟掳脦禄脰脙驴陋脢录录脝脢媒拢卢脠禄潞贸录脫脡脧麓芦陆酶脌麓碌脛脝冒脢录脦禄脰脙ppos
-	node *cur,*last;  //last卤铆脢戮脝楼脜盲脡脧脝楼脜盲麓庐脳卯潞贸脪禄赂枚脳脰路没碌脛脦禄脰脙
+	long pos=1;  
+	node *cur;  
 	char c;
 	int strlength=strlen(str);
 	if(strlength>1000){
 		printf("  over length!");
 		return;
 	}
-	//脧脠脥霉潞贸脪脝露炉脪禄赂枚脛拢脢陆麓庐碌脛鲁陇露脠
+	//因为是从模式串的末尾开始匹配的，所以先将链表移动一个字符串长度的距离
 	cur = movesteps(head,strlength);
-	j=strlength-1;  //脳卯潞贸脪禄赂枚脳脰路没
+	j=strlength-1;  //j指向字符串的最后一个字符
 	while(j>=0&&cur!=NULL){
 		if(str[j]==cur->ch){
 			cur=cur->pre;
-			i++;
-			//pos++;
+			i++;  //i记录字符匹配正确所移动的步数，便于其后如果出现不匹配字符的时候移动模式串
 			j--;
 		}
 		else{
 			c=cur->ch;
-			while(j>=0&&str[j]!=c&&cur!=NULL){
-				cur=cur->next;
-				pos++;  //录脟脗录脦禄脰脙
+			while(j>=0&&str[j]!=c&&cur!=NULL){  //在模式串中寻找当前失配字符左边第一个与匹配串中的失配字符相同的字符的位置
+				cur=cur->next;  //需要同时移动匹配串的指针使下一次能够正确地从模式串的末尾开始匹配
+				pos++;  //记录移动的距离
 				j--;
 			}
-			cur = movesteps(cur,i);
-			i=0;
-			j=strlength-1;
+			cur = movesteps(cur,i); //再移动已经匹配的距离，重新开始下一轮的匹配
+			i=0;  //归零
+			j=strlength-1;  //重新从末尾开始匹配
 		}
 	}
 	if(j<0)
-		printf("  %d / ",pos+ppos);
+		printf("  %d / ",pos+ppos);  //匹配成功
 	else 
 		printf("no found! / ");
 	gettimeofday(&end,NULL);
@@ -253,14 +251,14 @@ long match_3(node* head,char* str,long ppos){
 }
 
 /* name:Sunday
- * 脨猫脪陋脳脫潞炉脢媒拢潞movesteps
+ * 依赖函数movesteps();
  */
 
 long match_4(node* head,char* str,long ppos){
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int  i=0,j,k;
-	long pos=1;  //麓脫碌卤脟掳脦禄脰脙驴陋脢录录脝脢媒拢卢脠禄潞贸录脫脡脧麓芦陆酶脌麓碌脛脝冒脢录脦禄脰脙ppos
+	long pos=1;  
 	node *cur;  
 	char c;
 	int strlength=strlen(str);
@@ -268,27 +266,27 @@ long match_4(node* head,char* str,long ppos){
 		printf("  over length!");
 		return;
 	}
-	cur = movesteps(head,strlength);//脧脠脥霉潞贸脪脝露炉脪禄赂枚脛拢脢陆麓庐碌脛鲁陇露脠
-	j=strlength-1;  //露篓脦禄碌陆脳卯潞贸脪禄赂枚脳脰路没
+	cur = movesteps(head,strlength);//从末尾开始匹配，所以先移动一个字符串的距离
+	j=strlength-1;  //模式串从末尾开始匹配
 	while(j>=0&&cur!=NULL){
 		if(str[j]==cur->ch){
-			cur=cur->pre;
+			cur=cur->pre;   //与Horspool一样
 			i++;
 			j--;
 		}
 		else{
-			cur = movesteps(cur,i+1);
-			pos++;
+			cur = movesteps(cur,i+1);  //出现失配时，匹配串后移一位，然后在模式串中寻找最右边与下一个字符相同的字符的位置
+			pos++;  //距离计数加一
 			i=0;
 			if(cur==NULL)
-				break;   //碌陆脦脛碌碌脛漏脦虏脭貌脥脣鲁枚
+				break;   //如果到末尾则退出
 			j=strlength-1;
 			while(j>=0&&str[j]!=cur->ch){
 				j--;
-			}
+			} //在模式串中寻找最右边与匹配串中下一个字符相同的字符的位置
 			cur=movesteps(cur,strlength-j-1);
-			pos=pos+strlength-j-1;
-			j=strlength-1;
+			pos=pos+strlength-j-1;  //距离计数
+			j=strlength-1;  //重新从末尾开始匹配
 		}
 	}
 	
@@ -302,35 +300,42 @@ long match_4(node* head,char* str,long ppos){
 	/* if(cur!=NULL)
 		match_4(cur->next,str,pos+ppos);
 	else
-		return; */
+		return; */   //运用递归多次找出所有匹配的字符串
 }
 
-
+/*
+ *BoyerMoore 坏字符数组
+ *
+*/
 void get_bmbc(char* str,int* bmbc){
 	int i;
 	char c;
 	int strlength = strlen(str);
 	for(i=0;i<128;i++){
 		bmbc[i]=strlength;
-	}
+	}  //模式串中不存在的字符，移动距离为一个字符串的长度
 	for(i=0;i<strlength;i++){
 		c=str[i];
-		bmbc[c]=strlength-i;
+		bmbc[c]=strlength-i;  //坏字符数组下标是字符，数值是模式串中最靠右的该字符到右端的距离
 		// printf("[%c]%d\n", c,bmbc[c]);
 	}
 }
 
+/*
+ *BoyerMoore 好后缀数组
+ *
+*/
 void get_bmgs(char* str,int* bmgs){
 	int i,j,p;
 	int strlength = strlen(str);
-	int suff[strlength];
-	suff[strlength-1]=strlength;
+	int suff[strlength];  //需要辅助数组suff[]，suff[]为以i为右边界, 与模式串后缀匹配的最大长度
+	suff[strlength-1]=strlength;   //最后一个字符显然suff[]=strlength
 	for(i=strlength-2;i>=0;i--){
 		p=i;
 		while(p>=0&&str[p]==str[strlength-1-i+p]){
 			p--;
 		}
-		suff[i]=i-p;
+		suff[i]=i-p;  //得到suff[]
 	}
 	// puts("suff:");
 	/*for(i=0;i<strlength;i++){
@@ -340,38 +345,38 @@ void get_bmgs(char* str,int* bmgs){
 	// puts("bmgs:");
 	for(j=0;j<strlength;j++){
 		bmgs[j]=strlength-1;		
-	}
+	}  //没有匹配的好后缀时，移动的距离为strlength-1
 	for(j=0;j<strlength-1;j++){
-		bmgs[strlength-1-suff[j]]=strlength-1-j;		
+		bmgs[strlength-1-suff[j]]=strlength-1-j;	//得到bmgs[];	
 		//printf("[%d]%d\n",strlength-1-suff[j],strlength-1-j );
 	}
 }
 
-//比较两个数的大小，返回较大的那个数
+/*
+ *BoyerMoore 依赖函数
+ *比较好后缀与坏字符数组的大小，返回较大的那个数
+*/
 int max(int a,int b){
 	return a>b?a:b;
 }
 
 /*
  *BoyerMoore 算法
- *需要函数：get_bmgs(),get_bmbc(),max();
+ *依赖函数：get_bmgs(),get_bmbc(),max();
+ *movesteps();
  */
 long match_5(node* head,char* str,long ppos){
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int  i=0,j,k;
 	long pos=1;  //从当前位置开始计数，然后加上传进来的起始位置ppos
-	node *cur;  //last表示匹配上匹配串最后一个字符的位置
+	node *cur; 
 	char c;
 	int strlength=strlen(str);
-	// printf("%d\n",strlength );
-	int bmbc[128];
-/*	for(k=0;k<128;k++){
-		printf("%d",bmbc[k] );
-	}*/
+	int bmbc[128];  
 	int bmgs[strlength];
-	get_bmbc(str,bmbc);
-	get_bmgs(str,bmgs);
+	get_bmbc(str,bmbc);   //得到好后缀数组
+	get_bmgs(str,bmgs);   //得到坏字符数组
 	/*for(i=0;i<strlength;i++){
 		printf("%c%d ",str[i],bmbc[str[i]] );
 	}
@@ -380,35 +385,32 @@ long match_5(node* head,char* str,long ppos){
 		printf("%3d",bmgs[i] );
 	}*/
 
-	//先往后移动一个模式串的长度
+	//从后往前匹配，所以先往后移动一个模式串的长度
 	cur = movesteps(head,strlength);
 	if(cur==NULL)
-		return;
+		return;  //如果已经到末尾了，则退出
 	j=strlength-1;  //最后一个字符
 	while(j>=0){
-		//puts("start while");
 		if(str[j]==cur->ch){
-			cur=cur->pre;
+			cur=cur->pre;  //如果匹配则继续往前匹配前一个字符
 			i++;
-			//pos++;
 			j--;
 		}
 		else{
-			c=cur->ch;
-			i+=max(bmbc[str[j]],bmgs[j]);
-			pos+=max(bmbc[str[j]],bmgs[j]);
-			// printf("i=%d\n",i );
-			cur=movesteps(cur,i);
+			c=cur->ch;   //不匹配时
+			i+=max(bmbc[str[j]],bmgs[j]); //得到移动距离，为好后缀与坏字符数组中较大的那个，并加上先前已经匹配的那段距离i
+			pos+=max(bmbc[str[j]],bmgs[j]);  //距离计数，不需要加上i
+			cur=movesteps(cur,i);		///移动匹配串
 			if(cur==NULL){
 				break;
 			}
 			// putchar(cur->ch);
-			i=0;
-			j=strlength-1;
+			i=0;		//归零
+			j=strlength-1; //重新从末尾开始匹配
 		}
 	}
 	if(j<0)
-		printf("   %d / ",pos+ppos);
+		printf("  %d / ",pos+ppos);
 	else 
 		printf("no found! / ");
 	gettimeofday(&end,NULL);
@@ -427,7 +429,7 @@ void get_b(char* str,int* B){
 	for(i=0;i<strlength;i++){
 		B[str[i]]|=shift;
 		shift<<=1;
-	}
+	}  //得到模式串中各个字符在模式串中的位置，由一个32位的二进制数来表示，存在的位置为1，不存在为0
 	/*
 	for(i=0;i<strlength;i++){
 		printf("%c%x\n",str[i],B[str[i]]);
@@ -435,29 +437,28 @@ void get_b(char* str,int* B){
 }
 
 /* name:Shift-And
- * 脨猫脪陋脳脫潞炉脢媒拢潞get_b
+ * 依赖函数：get_b();
  */
 long match_6(node* head,char* str,long ppos){
 	struct timeval start,end;
 	gettimeofday(&start,NULL);
 	int i;
-	int B[128]={0};
-	long pos=1;  //麓脫碌卤脟掳脦禄脰脙驴陋脢录录脝脢媒拢卢脠禄潞贸录脫脡脧麓芦陆酶脌麓碌脛脝冒脢录脦禄脰脙ppos
+	int B[128]={0};  //初始值为0
+	long pos=1;
 	int strlength=strlen(str);
-	if(strlength>32){
+	if(strlength>32){		//因为使用long类型来保存D，mask，所以最大的匹配长度为32位
 		printf("  over length!");
 		return;
 	}
-	long long D=0,mask;
-	mask = 1<<(strlength-1);
+	long D=0,mask;
+	mask = 1<<(strlength-1);  //得到标尺，当D与之相等的时候则匹配成功
 	node* cur=head->next;
-	get_b(str,B);
+	get_b(str,B);		//得到辅助数组B
 	while(cur!=NULL){
-		D=(D<<1|1)&B[cur->ch];
-		//printf("%x\n",D);
+		D=(D<<1|1)&B[cur->ch];  //依次往后移动模式串，并更新D的数值
 		cur=cur->next;
 		pos++;
-		if(D&mask)
+		if(D&mask)		//当D和mask相等的时候，说明匹配成功
 			break;
 	}
 	if(D&mask)
@@ -467,10 +468,9 @@ long match_6(node* head,char* str,long ppos){
 	gettimeofday(&end,NULL);
 	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
 	printf("%f",timeuse/1000000.0);
-		//printf("find");
 	/* if(cur!=NULL)
 		match_6(cur,str,pos+ppos);
 	else 
 		return;
-	 */
+	 */  //通过递归寻找所有匹配的字符串
 }
