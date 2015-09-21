@@ -17,9 +17,11 @@ struct timeval{
 
 void start();  
 int init(node*);  //初始化，将文件中的字符串读取到链表中
+void getstring(long place,int strlength,char* str);
 void show(node*);  //测试是否初始化成功
 void create(int choice,long number); //ascii.c中产生数据文件
 void display(node* head,char* str);  //调用匹配函数并显示匹配结果
+void showresult(int test_times);  //显示最终的平均时间
 
 long match_1(node* head,char* str,long ppos);  //Brute Force匹配算法函数，传入需要匹配的字符串
 long match_2(node* head,char* str,long ppos);  //KMP 

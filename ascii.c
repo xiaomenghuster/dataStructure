@@ -65,6 +65,8 @@ void create(int choice,long number){
 			default:
 				break;
 		}
+		if(!(i%10000))
+			fputc('\n',fout);
 		i++;
 	}
 	fclose(fout);

@@ -1,35 +1,156 @@
 /*writor:xiaomenghuster  date:summer
- *æ•°æ®ç»“æ„è¯¾ç¨‹è®¾è®¡
- *äº”ç§å­—ç¬¦ä¸²åŒ¹é…ç®—æ³•
- *å¯»æ‰¾åˆ°ç¬¬ä¸€ä¸ªåŒ¹é…çš„å­—ç¬¦ä¸²ä½ç½®ï¼Œæ²¡æœ‰åˆ™è¾“å‡ºno find!
- *shift and åªèƒ½å¯»æ‰¾32ä¸ªå­—ç¬¦ä»¥å†…çš„å­—ç¬¦ä¸²ï¼Œå…¶ä»–çš„æœ€å¤šä¸º1000
+ *Êı¾İ½á¹¹¿Î³ÌÉè¼Æ
+ *ÎåÖÖ×Ö·û´®Æ¥ÅäËã·¨
+ *Ñ°ÕÒËùÓĞÆ¥ÅäµÄ×Ö·û´®Î»ÖÃ£¬Ã»ÓĞÔòÊä³öno find!
+ *shift and Ö»ÄÜÑ°ÕÒ32¸ö×Ö·ûÒÔÄÚµÄ×Ö·û´®£¬ÆäËûµÄ×î¶àÎª1000
 */
 #include <stdio.h>
 #include "myhead.h"
 #include<stdlib.h>
 #include<string.h>
 #include<time.h>
+long time_whole[6];  //×ÜÊ±¼ä bf,kmp,horspool,sunday,bm,shift
 int main(){
-	char str[1000];  //æœ€å¤šå¯ä»¥ä¼ å…¥1000ä¸ªå­—ç¬¦ï¼Œä½†æ˜¯å…¶ä¸­Shift-Andç®—æ³•æœ€å¤šåªèƒ½å¤„ç†32ä¸ªå­—ç¬¦
+	int i;
+	for(i=0;i<6;i++)
+		time_whole[i]=0;
+	char str[1000];  //×î¶à¿ÉÒÔ´«Èë1000¸ö×Ö·û£¬µ«ÊÇÆäÖĞShift-AndËã·¨×î¶àÖ»ÄÜ´¦Àí32¸ö×Ö·û
+	int strlength,test_times,choice,iof;
+	long number,place;
 	node *head,*p;
-	start();  //è¾“å‡ºç¨‹åºæç¤ºä¿¡æ¯
-	if(!(head=(node*)malloc(sizeof(node))))
-		return ERROR;
-	init(head);//è¯»å–æ–‡ä»¶å†…å®¹ï¼Œåˆå§‹åŒ–é“¾è¡¨
-	while(1){
-		printf("please input the string: \n");
-		//show(head); //æ£€æŸ¥åŒå‘é“¾è¡¨æ—¶å€™æ­£ç¡®å»ºç«‹
-		scanf("%s",str);
-		display(head,str);  //è°ƒç”¨åŒ¹é…å‡½æ•°å¹¶è¾“å‡ºç»“æœ
-		puts("");
-	}
+	start();  //Êä³ö³ÌĞòÌáÊ¾ĞÅÏ¢
 	
+	//init(head);//¶ÁÈ¡ÎÄ¼şÄÚÈİ£¬³õÊ¼»¯Á´±í
+
+	printf("--------------------------------------------------------\n");
+	printf("|  input the string or find the string from ascii.txt  |\n");
+	printf("|  1:find in ascii.txt      2:input the string         |\n"); 
+	printf("--------------------------------------------------------\n");
+	scanf("%d",&iof);
+	switch(iof){
+		case 1:  //ÏÈÉú³É×Ö·û¼¯ÎÄ¼ş£¬È»ºóÔÙÔÚÎÄ¼şÖĞÖ¸¶¨Î»ÖÃÑ°ÕÒ×Ö·û´®
+			printf("----------------------------------------------------\n");
+			printf("|  which kind of ascii.txt do you want to create?  |\n");
+			printf("|  1:[01]    2:[0-9]    3:[a-z]    4:[a-z0-9A-Z]   |\n"); 
+			printf("----------------------------------------------------\n");
+			printf("your choice: ");
+			scanf("%d",&choice);
+			puts("How many character do you want to produce?");
+			scanf("%d",&number);
+
+			puts("please input the place and the strlength:");
+			scanf("%d %d",&place,&strlength);
+
+		    puts("please input the test times:");
+			scanf("%d",&test_times);
+			int test_times_save=test_times;
+
+			// getstring(place,strlength,str);
+			while(test_times_save>0){   //Ê¹ÓÃtest_time_save±£´ætest_timeµÄÊıÖµ
+				create(choice,number);  //ĞÎ³É×Ö·û¼¯ÎÄ¼ş
+				getstring(place,strlength,str);  //µÃµ½Ä¿±ê×Ö·û´®
+				puts("the string: ");
+				puts(str);   //ÏÔÊ¾×Ö·û´®
+				if(!(head=(node*)malloc(sizeof(node))))
+					return ERROR;
+				init(head);			//³õÊ¼»¯Ë«ÏòÁ´±í 
+				display(head,str);  //µ÷ÓÃÆ¥Åäº¯Êı²¢Êä³ö½á¹û
+				puts("");
+				test_times_save--;
+			}
+			break;
+		case 2:
+			puts("please input the string:");
+			scanf("%s",str);
+			test_times=1;
+			//create(choice,number);  //ĞÎ³É×Ö·û¼¯ÎÄ¼ş
+			puts(str);
+			if(!(head=(node*)malloc(sizeof(node))))
+				return ERROR;
+			init(head);			//³õÊ¼»¯Ë«ÏòÁ´±í 
+			display(head,str);  //µ÷ÓÃÆ¥Åäº¯Êı²¢Êä³ö½á¹û
+			puts("");
+			break;
+		default: break;
+	}
+	showresult(test_times);
 }
 
 void start(){
 	printf(" ------------------------------------------\n");
 	printf("| This the string-match algorithm!         |\n");
+	printf("| Auther:xiaomeng                          |\n");
+	printf("| Date:2015.9.21                           |\n");
+	printf("|-----------all right reserve--------------|\n");
 	printf(" ------------------------------------------\n");
+
+}
+
+void create(int choice,long number){
+	char c;
+	int kind;
+	long i=0;
+	FILE* fout= fopen(CONTENTFILE,"w");
+	while(i<number){
+		switch(choice){
+			case 1:
+				c=rand()%2+'0';
+				//putchar(c);
+				fputc(c,fout);
+				break;
+			case 2:
+				c=rand()%10+48;
+				// putchar(c);
+				fputc(c,fout);
+				break;
+			case 3:
+				c=rand()%26+97;
+				// putchar(c);
+				fputc(c,fout);
+				break;
+			case 4:
+				kind=rand()%3+1;
+				switch(kind){
+					case 1:
+						c=rand()%10+'0';
+						break;
+					case 2:
+						c=rand()%26+'a';
+						break;
+					case 3:
+						c=rand()%26+'A';
+						break;
+					default:
+						break;
+				}
+				fputc(c,fout);
+				break;
+			default:
+				break;
+		}
+		if(!(i%10000))
+			fputc('\n',fout);
+		i++;
+	}
+	fclose(fout);
+}
+
+void getstring(long place,int strlength,char* str){
+	FILE *fin;
+	int i=0;
+	char c;
+	fin=fopen(CONTENTFILE,"r");
+	while(place>1){
+		fgetc(fin);
+		place--;
+	}
+	while(i<strlength){
+		c=fgetc(fin);
+		str[i]=c;
+		i++;
+	}
+	str[strlength]='\0';
+
 }
 
 int init(node* head){
@@ -46,14 +167,14 @@ int init(node* head){
 			return ERROR;
 		p->ch=c; 
 		h->next=p;
-		p->pre=h;  //ä¸ªåˆ«åŒ¹é…ç®—æ³•éœ€è¦åŒå‘é“¾è¡¨
+		p->pre=h;  //¸ö±ğÆ¥ÅäËã·¨ĞèÒªË«ÏòÁ´±í
 		h=p;
 		//putchar(c);
 	}
 	h->next=NULL;
 } 
 
-void show(node* h){
+void show(node* h){   //ÏÔÊ¾Ë«ÏòÁ´±í£¬²âÊÔÉú³ÉÇé¿ö
 	h=h->next;
 	while(h->next!=NULL){
 		putchar(h->ch);
@@ -66,37 +187,131 @@ void show(node* h){
 }
 
 void display(node* head,char* str){
+	struct timeval start,end;
+	long bf_time,kmp_time,Horspool_time,Sunday_time,bm_time,shift_time;
 	puts(" ");
 	puts("finding results:");
-	puts("algorithm\t|   place / time(s)");
-	puts("-------------------------------------");
+	
 	printf("%s","Brute Force\t| ");
+	gettimeofday(&start,NULL);  //µÃµ½¿ªÊ¼Ê±¼ä
 	match_1(head,str,0);
-	puts("");					//æ¢è¡Œ
+	gettimeofday(&end,NULL);  //µÃµ½½áÊøÊ±¼ä
+	bf_time=1000000*(end.sec-start.sec)+end.usec-start.usec;  //¼ÆËã¾­¹ıµÄÊ±¼ä
+	//printf("%f",timeuse/1000000.0);
+	time_whole[0]+=bf_time;  //Ê±¼äÀÛ¼Ó
+	puts("");					//»»ĞĞ
+	puts("");
+
 	printf("%s","KMP\t\t| ");
+	gettimeofday(&start,NULL);  //µÃµ½¿ªÊ¼Ê±¼ä
 	match_2(head,str,0);
+	gettimeofday(&end,NULL);  //µÃµ½½áÊøÊ±¼ä
+	kmp_time=1000000*(end.sec-start.sec)+end.usec-start.usec;  //¼ÆËã¾­¹ıµÄÊ±¼ä
+	// printf("%f",timeuse/1000000.0);
+	time_whole[1]+=kmp_time;
 	puts("");
+	puts("");					//»»ĞĞ
+
 	printf("%s","Horspool\t| ");
+	gettimeofday(&start,NULL);
 	match_3(head,str,0);
+	gettimeofday(&end,NULL);  //µÃµ½½áÊøÊ±¼ä
+	Horspool_time=1000000*(end.sec-start.sec)+end.usec-start.usec;  //¼ÆËã¾­¹ıµÄÊ±¼ä
+	// printf("%f",timeuse/1000000.0);
+	time_whole[2]+=Horspool_time;
 	puts("");
+	puts("");
+
 	printf("%s","Sunday\t\t| ");
+	gettimeofday(&start,NULL);
 	match_4(head,str,0);
+	gettimeofday(&end,NULL);  //µÃµ½½áÊøÊ±¼ä
+	Sunday_time=1000000*(end.sec-start.sec)+end.usec-start.usec;  //¼ÆËã¾­¹ıµÄÊ±¼ä
+	// printf("%f",timeuse/1000000.0);
+	time_whole[3]+=Sunday_time;
 	puts("");
+	puts("");
+
 	printf("%s", "BoyerMoore\t| ");
+	gettimeofday(&start,NULL);
 	match_5(head,str,0);
+	gettimeofday(&end,NULL);  //µÃµ½½áÊøÊ±¼ä
+	bm_time=1000000*(end.sec-start.sec)+end.usec-start.usec;  //¼ÆËã¾­¹ıµÄÊ±¼ä
+	// printf("%f",timeuse/1000000.0);
+	time_whole[4]+=bm_time;
 	puts("");
+	puts("");
+
 	printf("%s","Shift-And\t| ");
-	match_6(head,str,0);
+	gettimeofday(&start,NULL);
+	match_6(head->next,str,0);
+	gettimeofday(&end,NULL);  //µÃµ½½áÊøÊ±¼ä
+	shift_time=1000000*(end.sec-start.sec)+end.usec-start.usec;  //¼ÆËã¾­¹ıµÄÊ±¼ä
+	// printf("%f",timeuse/1000000.0);
+	time_whole[5]+=shift_time;
 	puts("");
+	puts("");
+
+	puts("time_use:");
+	puts("algorithm\t|\ttime(s)");
+	puts("-------------------------------------");
+	printf("%s","Brute Force\t|\t");
+	printf("%f\n",bf_time/1000000.0);
+
+	printf("%s","KMP\t\t|\t");
+	printf("%f\n",kmp_time/1000000.0);
+
+	printf("%s","Horspool\t|\t");
+	printf("%f\n",Horspool_time/1000000.0);
+
+	printf("%s","Sunday\t\t|\t");
+	printf("%f\n",Sunday_time/1000000.0);
+
+	printf("%s", "BoyerMoore\t|\t");
+	printf("%f\n",bm_time/1000000.0);
+
+	printf("%s","Shift-And\t|\t");
+	printf("%f\n",shift_time/1000000.0);
 }
 
+void showresult(int test_times){
+	puts("average_time_use:");
+	puts("algorithm\t|\ttime(s)");
+	puts("-------------------------------------");
+	printf("%s","Brute Force\t|\t");
+	// printf("%d\n",time_whole[0] );
+	time_whole[0]/=test_times;     				//xiaomeng
+	printf("%f\n",time_whole[0]/1000000.0);
+
+	printf("%s","KMP\t\t|\t");
+	time_whole[1]/=test_times;
+	printf("%f\n",time_whole[1]/1000000.0);
+
+	printf("%s","Horspool\t|\t");
+	time_whole[2]/=test_times;
+	printf("%f\n",time_whole[2]/1000000.0);
+
+	printf("%s","Sunday\t\t|\t");
+	time_whole[3]/=test_times;
+	printf("%f\n",time_whole[3]/1000000.0);
+
+	printf("%s", "BoyerMoore\t|\t");
+	time_whole[4]/=test_times;
+	printf("%f\n",time_whole[4]/1000000.0);
+
+	printf("%s","Shift-And\t|\t");
+	time_whole[5]/=test_times;
+	printf("%f\n",time_whole[5]/1000000.0);
+}
+
+
 /* name:Brute Force 
- * æ²¡æœ‰ä¾èµ–å‡½æ•°
+ * Ã»ÓĞÒÀÀµº¯Êı
  */
 
 long match_1(node* head,char* str,long ppos){
-	struct timeval start,end;
-	gettimeofday(&start,NULL);  //å¾—åˆ°å¼€å§‹æ—¶é—´
+	/*struct timeval start,end;
+	gettimeofday(&start,NULL);  //µÃµ½¿ªÊ¼Ê±¼ä*/
   	int  j=0;
 	long pos=0;
 	node *cur,*pre;
@@ -113,29 +328,31 @@ long match_1(node* head,char* str,long ppos){
 			j++;
 		}
 		else{
-			j=0;  //æ¨¡å¼ä¸²å›åˆ°ç¬¬ä¸€ä¸ªåœ°åºœ
+			j=0;  //Ä£Ê½´®»Øµ½µÚÒ»¸öµØ¸®
 			pos++;
-			cur=pre->next;  //åŒ¹é…ä¸²åé€€ä¸€ä¸ªå­—ç¬¦ï¼Œç»§ç»­è¿›è¡Œæ¯”è¾ƒ
-			pre=cur;  //ä¿å­˜å½“å‰ä½ç½®
+			cur=pre->next;  //Æ¥Åä´®ºóÍËÒ»¸ö×Ö·û£¬¼ÌĞø½øĞĞ±È½Ï
+			pre=cur;  //±£´æµ±Ç°Î»ÖÃ
 		}
 			
 	}
 	if(j==strlength)
-		printf("  %d / ",pos+ppos);
+		printf("%d---",pos+ppos);
+	if(cur->next!=NULL)
+		match_1(cur,str,ppos+pos+strlength);
 	else 
-		printf("no found! / ");
-	gettimeofday(&end,NULL);  //å¾—åˆ°ç»“æŸæ—¶é—´
-	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;  //è®¡ç®—ç»è¿‡çš„æ—¶é—´
-	printf("%f",timeuse/1000000.0);
+	 	printf("end of file!");
+	/*gettimeofday(&end,NULL);  //µÃµ½½áÊøÊ±¼ä
+	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;  //¼ÆËã¾­¹ıµÄÊ±¼ä
+	printf("%f",timeuse/1000000.0);*/
 }
 
 void get_next(char* str,int* next){
 	// puts(str);
 	int i=1,j=0,k=0;
 	next[1]=0;
-	int strlength = strlen(str);//å¾—åˆ°å­—ç¬¦ä¸²çš„é•¿åº¦
-	char str_2[strlength+2]; //éœ€è¦ä¾æ¬¡åç§»ä¸€ä½ï¼Œå¹¶ä¸”è€ƒè™‘ç»“æŸç¬¦ï¼Œæ‰€ä»¥é•¿åº¦æ˜¯srelentgth+2
-	while(str_2[k+1]=str[k]){  //ä¾æ¬¡åç§»
+	int strlength = strlen(str);//µÃµ½×Ö·û´®µÄ³¤¶È
+	char str_2[strlength+2]; //ĞèÒªÒÀ´ÎºóÒÆÒ»Î»£¬²¢ÇÒ¿¼ÂÇ½áÊø·û£¬ËùÒÔ³¤¶ÈÊÇsrelentgth+2
+	while(str_2[k+1]=str[k]){  //ÒÀ´ÎºóÒÆ
 		// putchar(str[k]);
 		k++;
 	}
@@ -148,49 +365,51 @@ void get_next(char* str,int* next){
 		}
 		else 
 			j=next[j];
-	}  //å¾—åˆ°nextæ•°ç»„
+	}  //µÃµ½nextÊı×é
 }
 
 
 /*
- *KMPç®—æ³•
- *ä¾èµ–å‡½æ•°ï¼šget_next();
+ *KMPËã·¨
+ *ÒÀÀµº¯Êı£ºget_next();
 */
 long match_2(node* head,char* str,long ppos){
 	// puts(str);
-	struct timeval start,end;
-	gettimeofday(&start,NULL);
+	/*struct timeval start,end;
+	gettimeofday(&start,NULL);*/
 	int i=0,j=1;
-	long pos=0;  //è®°å½•ç´¯è®¡ç§»åŠ¨çš„è·ç¦»ï¼ŒåŠ ä¸Šä¼ è¿›æ¥çš„å‚æ•°pposï¼Œå°±æ˜¯æ¨¡å¼ä¸²åœ¨åŒ¹é…ä¸²ä¸­çš„ä½ç½®
+	long pos=0;  //¼ÇÂ¼ÀÛ¼ÆÒÆ¶¯µÄ¾àÀë£¬¼ÓÉÏ´«½øÀ´µÄ²ÎÊıppos£¬¾ÍÊÇÄ£Ê½´®ÔÚÆ¥Åä´®ÖĞµÄÎ»ÖÃ
 	node *cur,*pre;
 	cur=head;
 	pre=head;
 	int strlength=strlen(str);
 	int next[strlength+1];
 	
-	get_next(str,next);  //å¾—åˆ°nextæ•°ç»„
-	while(j<=strlength&&cur->next!=NULL){  //å¼€å§‹åŒ¹é…
+	get_next(str,next);  //µÃµ½nextÊı×é
+	while(j<=strlength&&cur->next!=NULL){  //¿ªÊ¼Æ¥Åä
 		if(j==0||str[j-1]==cur->ch){ 
-			cur=cur->next;		//å¦‚æœç›¸ç­‰ï¼Œæ¨¡å¼ä¸²å’ŒåŒ¹é…ä¸²åŒæ—¶åç§»ï¼Œè¿›è¡Œä¸‹ä¸€ä¸ªå­—ç¬¦çš„åŒ¹é…
+			cur=cur->next;		//Èç¹ûÏàµÈ£¬Ä£Ê½´®ºÍÆ¥Åä´®Í¬Ê±ºóÒÆ£¬½øĞĞÏÂÒ»¸ö×Ö·ûµÄÆ¥Åä
 			pos++;
 			j++;
 		}
 		else{
-			j=next[j];  //å¦‚æœä¸ç›¸ç™»ï¼Œå°±é€šè¿‡nextæ•°ç»„å¾—åˆ°æ­¤æ—¶åŒ¹é…ä¸²çš„é‚£ä¸ªå­—ç¬¦åº”è¯¥å’Œæ¨¡å¼ä¸²ä¸­çš„å“ªä¸ªè¿›è¡ŒåŒ¹é…
+			j=next[j];  //Èç¹û²»ÏëµÈ£¬¾ÍÍ¨¹ınextÊı×éµÃµ½´ËÊ±Æ¥Åä´®µÄÄÇ¸ö×Ö·ûÓ¦¸ÃºÍÄ£Ê½´®ÖĞµÄÄÄ¸ö½øĞĞÆ¥Åä
 		}
 	}
-	if(j>strlength)     //åŒ¹é…æˆåŠŸåˆ™j>strlength,ç„¶åè¾“å‡ºæ¨¡å¼ä¸²åœ¨åŒ¹é…ä¸²ä¸­çš„ä½ç½®
-		printf("  %d / ",pos+ppos-strlength);
+	if(j>strlength)     //Æ¥Åä³É¹¦Ôòj>strlength,È»ºóÊä³öÄ£Ê½´®ÔÚÆ¥Åä´®ÖĞµÄÎ»ÖÃ
+		printf("%d---",pos+ppos-strlength);
+	if(cur->next!=NULL)
+		match_2(cur,str,pos+ppos);
 	else 
-		printf("no found! / ");
-	gettimeofday(&end,NULL);
+		printf("end of file!");
+	/*gettimeofday(&end,NULL);
 	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
-	printf("%f",timeuse/1000000.0);
+	printf("%f",timeuse/1000000.0);*/
 }
 
 /*
  *movesteps()
- *ç§»åŠ¨é“¾è¡¨æŒ‡é’ˆï¼Œè·ç¦»ç”±å‚æ•°ä¼ å…¥
+ *ÒÆ¶¯Á´±íÖ¸Õë£¬¾àÀëÓÉ²ÎÊı´«Èë
  *
 */
 node* movesteps(node* head,int steps){
@@ -202,48 +421,54 @@ node* movesteps(node* head,int steps){
 }
 
 /* name:Horspool 
- * ä¾èµ–å‡½æ•°ï¼šmovesteps();
+ * ÒÀÀµº¯Êı£ºmovesteps();
  */
 long match_3(node* head,char* str,long ppos){
-	struct timeval start,end;
-	gettimeofday(&start,NULL);
+	/*struct timeval start,end;
+	gettimeofday(&start,NULL);*/
 	int  i=0,j,k;
 	long pos=1;  
 	node *cur;  
 	char c;
 	int strlength=strlen(str);
+	//puts(str);
 	if(strlength>1000){
 		printf("  over length!");
 		return;
 	}
-	//å› ä¸ºæ˜¯ä»æ¨¡å¼ä¸²çš„æœ«å°¾å¼€å§‹åŒ¹é…çš„ï¼Œæ‰€ä»¥å…ˆå°†é“¾è¡¨ç§»åŠ¨ä¸€ä¸ªå­—ç¬¦ä¸²é•¿åº¦çš„è·ç¦»
+	//ÒòÎªÊÇ´ÓÄ£Ê½´®µÄÄ©Î²¿ªÊ¼Æ¥ÅäµÄ£¬ËùÒÔÏÈ½«Á´±íÒÆ¶¯Ò»¸ö×Ö·û´®³¤¶ÈµÄ¾àÀë
 	cur = movesteps(head,strlength);
-	j=strlength-1;  //jæŒ‡å‘å­—ç¬¦ä¸²çš„æœ€åä¸€ä¸ªå­—ç¬¦
+	j=strlength-1;  //jÖ¸Ïò×Ö·û´®µÄ×îºóÒ»¸ö×Ö·û
 	while(j>=0&&cur!=NULL){
 		if(str[j]==cur->ch){
 			cur=cur->pre;
-			i++;  //iè®°å½•å­—ç¬¦åŒ¹é…æ­£ç¡®æ‰€ç§»åŠ¨çš„æ­¥æ•°ï¼Œä¾¿äºå…¶åå¦‚æœå‡ºç°ä¸åŒ¹é…å­—ç¬¦çš„æ—¶å€™ç§»åŠ¨æ¨¡å¼ä¸²
+			i++;  //i¼ÇÂ¼×Ö·ûÆ¥ÅäÕıÈ·ËùÒÆ¶¯µÄ²½Êı£¬±ãÓÚÆäºóÈç¹û³öÏÖ²»Æ¥Åä×Ö·ûµÄÊ±ºòÒÆ¶¯Ä£Ê½´®
 			j--;
 		}
 		else{
 			c=cur->ch;
-			while(j>=0&&str[j]!=c&&cur!=NULL){  //åœ¨æ¨¡å¼ä¸²ä¸­å¯»æ‰¾å½“å‰å¤±é…å­—ç¬¦å·¦è¾¹ç¬¬ä¸€ä¸ªä¸åŒ¹é…ä¸²ä¸­çš„å¤±é…å­—ç¬¦ç›¸åŒçš„å­—ç¬¦çš„ä½ç½®
-				cur=cur->next;  //éœ€è¦åŒæ—¶ç§»åŠ¨åŒ¹é…ä¸²çš„æŒ‡é’ˆä½¿ä¸‹ä¸€æ¬¡èƒ½å¤Ÿæ­£ç¡®åœ°ä»æ¨¡å¼ä¸²çš„æœ«å°¾å¼€å§‹åŒ¹é…
-				pos++;  //è®°å½•ç§»åŠ¨çš„è·ç¦»
+			while(j>=0&&str[j]!=c&&cur!=NULL){  //ÔÚÄ£Ê½´®ÖĞÑ°ÕÒµ±Ç°Ê§Åä×Ö·û×ó±ßµÚÒ»¸öÓëÆ¥Åä´®ÖĞµÄÊ§Åä×Ö·ûÏàÍ¬µÄ×Ö·ûµÄÎ»ÖÃ
+				cur=cur->next;  //ĞèÒªÍ¬Ê±ÒÆ¶¯Æ¥Åä´®µÄÖ¸ÕëÊ¹ÏÂÒ»´ÎÄÜ¹»ÕıÈ·µØ´ÓÄ£Ê½´®µÄÄ©Î²¿ªÊ¼Æ¥Åä
+				pos++;  //¼ÇÂ¼ÒÆ¶¯µÄ¾àÀë
 				j--;
 			}
-			cur = movesteps(cur,i); //å†ç§»åŠ¨å·²ç»åŒ¹é…çš„è·ç¦»ï¼Œé‡æ–°å¼€å§‹ä¸‹ä¸€è½®çš„åŒ¹é…
-			i=0;  //å½’é›¶
-			j=strlength-1;  //é‡æ–°ä»æœ«å°¾å¼€å§‹åŒ¹é…
+			cur = movesteps(cur,i); //ÔÙÒÆ¶¯ÒÑ¾­Æ¥ÅäµÄ¾àÀë£¬ÖØĞÂ¿ªÊ¼ÏÂÒ»ÂÖµÄÆ¥Åä
+			i=0;  //¹éÁã
+			j=strlength-1;  //ÖØĞÂ´ÓÄ©Î²¿ªÊ¼Æ¥Åä
 		}
 	}
+	//printf("%d\n",j );
 	if(j<0)
-		printf("  %d / ",pos+ppos);  //åŒ¹é…æˆåŠŸ
+		printf("%d---",pos+ppos);  //Æ¥Åä³É¹¦
+	if(cur!=NULL){
+		cur=movesteps(cur,strlength);
+		match_3(cur,str,pos+ppos+strlength-1);
+	}
 	else 
-		printf("no found! / ");
-	gettimeofday(&end,NULL);
+		printf("end of file!");
+	/*gettimeofday(&end,NULL);
 	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
-	printf("%f",timeuse/1000000.0);
+	printf("%f",timeuse/1000000.0);*/
 	/* if(cur!=NULL)
 		match_3(cur->next,str,pos+ppos);
 	else 
@@ -251,12 +476,12 @@ long match_3(node* head,char* str,long ppos){
 }
 
 /* name:Sunday
- * ä¾èµ–å‡½æ•°movesteps();
+ * ÒÀÀµº¯Êımovesteps();
  */
 
 long match_4(node* head,char* str,long ppos){
-	struct timeval start,end;
-	gettimeofday(&start,NULL);
+	/*struct timeval start,end;
+	gettimeofday(&start,NULL);*/
 	int  i=0,j,k;
 	long pos=1;  
 	node *cur;  
@@ -266,45 +491,49 @@ long match_4(node* head,char* str,long ppos){
 		printf("  over length!");
 		return;
 	}
-	cur = movesteps(head,strlength);//ä»æœ«å°¾å¼€å§‹åŒ¹é…ï¼Œæ‰€ä»¥å…ˆç§»åŠ¨ä¸€ä¸ªå­—ç¬¦ä¸²çš„è·ç¦»
-	j=strlength-1;  //æ¨¡å¼ä¸²ä»æœ«å°¾å¼€å§‹åŒ¹é…
+	cur = movesteps(head,strlength);//´ÓÄ©Î²¿ªÊ¼Æ¥Åä£¬ËùÒÔÏÈÒÆ¶¯Ò»¸ö×Ö·û´®µÄ¾àÀë
+	j=strlength-1;  //Ä£Ê½´®´ÓÄ©Î²¿ªÊ¼Æ¥Åä
 	while(j>=0&&cur!=NULL){
 		if(str[j]==cur->ch){
-			cur=cur->pre;   //ä¸Horspoolä¸€æ ·
+			cur=cur->pre;   //ÓëHorspoolÒ»Ñù
 			i++;
 			j--;
 		}
 		else{
-			cur = movesteps(cur,i+1);  //å‡ºç°å¤±é…æ—¶ï¼ŒåŒ¹é…ä¸²åç§»ä¸€ä½ï¼Œç„¶ååœ¨æ¨¡å¼ä¸²ä¸­å¯»æ‰¾æœ€å³è¾¹ä¸ä¸‹ä¸€ä¸ªå­—ç¬¦ç›¸åŒçš„å­—ç¬¦çš„ä½ç½®
-			pos++;  //è·ç¦»è®¡æ•°åŠ ä¸€
+			cur = movesteps(cur,i+1);  //³öÏÖÊ§ÅäÊ±£¬Æ¥Åä´®ºóÒÆÒ»Î»£¬È»ºóÔÚÄ£Ê½´®ÖĞÑ°ÕÒ×îÓÒ±ßÓëÏÂÒ»¸ö×Ö·ûÏàÍ¬µÄ×Ö·ûµÄÎ»ÖÃ
+			pos++;  //¾àÀë¼ÆÊı¼ÓÒ»
 			i=0;
 			if(cur==NULL)
-				break;   //å¦‚æœåˆ°æœ«å°¾åˆ™é€€å‡º
+				break;   //Èç¹ûµ½Ä©Î²ÔòÍË³ö
 			j=strlength-1;
 			while(j>=0&&str[j]!=cur->ch){
 				j--;
-			} //åœ¨æ¨¡å¼ä¸²ä¸­å¯»æ‰¾æœ€å³è¾¹ä¸åŒ¹é…ä¸²ä¸­ä¸‹ä¸€ä¸ªå­—ç¬¦ç›¸åŒçš„å­—ç¬¦çš„ä½ç½®
+			} //ÔÚÄ£Ê½´®ÖĞÑ°ÕÒ×îÓÒ±ßÓëÆ¥Åä´®ÖĞÏÂÒ»¸ö×Ö·ûÏàÍ¬µÄ×Ö·ûµÄÎ»ÖÃ
 			cur=movesteps(cur,strlength-j-1);
-			pos=pos+strlength-j-1;  //è·ç¦»è®¡æ•°
-			j=strlength-1;  //é‡æ–°ä»æœ«å°¾å¼€å§‹åŒ¹é…
+			pos=pos+strlength-j-1;  //¾àÀë¼ÆÊı
+			j=strlength-1;  //ÖØĞÂ´ÓÄ©Î²¿ªÊ¼Æ¥Åä
 		}
 	}
 	
 	if(j<0)
-		printf("  %d / ",pos+ppos);
+		printf("%d---",pos+ppos);
+	if(cur!=NULL){
+		cur=movesteps(cur,strlength);	
+		match_4(cur,str,pos+ppos+strlength-1);
+	}
 	else 
-		printf("no found! / ");
-	gettimeofday(&end,NULL);
+		printf("end of file!");
+	/*gettimeofday(&end,NULL);
 	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
-	printf("%f",timeuse/1000000.0);
+	printf("%f",timeuse/1000000.0);*/
 	/* if(cur!=NULL)
 		match_4(cur->next,str,pos+ppos);
 	else
-		return; */   //è¿ç”¨é€’å½’å¤šæ¬¡æ‰¾å‡ºæ‰€æœ‰åŒ¹é…çš„å­—ç¬¦ä¸²
+		return; */   //ÔËÓÃµİ¹é¶à´ÎÕÒ³öËùÓĞÆ¥ÅäµÄ×Ö·û´®
 }
 
 /*
- *BoyerMoore åå­—ç¬¦æ•°ç»„
+ *BoyerMoore »µ×Ö·ûÊı×é
  *
 */
 void get_bmbc(char* str,int* bmbc){
@@ -313,70 +542,70 @@ void get_bmbc(char* str,int* bmbc){
 	int strlength = strlen(str);
 	for(i=0;i<128;i++){
 		bmbc[i]=strlength;
-	}  //æ¨¡å¼ä¸²ä¸­ä¸å­˜åœ¨çš„å­—ç¬¦ï¼Œç§»åŠ¨è·ç¦»ä¸ºä¸€ä¸ªå­—ç¬¦ä¸²çš„é•¿åº¦
+	}  //Ä£Ê½´®ÖĞ²»´æÔÚµÄ×Ö·û£¬ÒÆ¶¯¾àÀëÎªÒ»¸ö×Ö·û´®µÄ³¤¶È
 	for(i=0;i<strlength;i++){
 		c=str[i];
-		bmbc[c]=strlength-i;  //åå­—ç¬¦æ•°ç»„ä¸‹æ ‡æ˜¯å­—ç¬¦ï¼Œæ•°å€¼æ˜¯æ¨¡å¼ä¸²ä¸­æœ€é å³çš„è¯¥å­—ç¬¦åˆ°å³ç«¯çš„è·ç¦»
+		bmbc[c]=strlength-i;  //»µ×Ö·ûÊı×éÏÂ±êÊÇ×Ö·û£¬ÊıÖµÊÇÄ£Ê½´®ÖĞ×î¿¿ÓÒµÄ¸Ã×Ö·ûµ½ÓÒ¶ËµÄ¾àÀë
 		// printf("[%c]%d\n", c,bmbc[c]);
 	}
 }
 
 /*
- *BoyerMoore å¥½åç¼€æ•°ç»„
+ *BoyerMoore ºÃºó×ºÊı×é
  *
 */
 void get_bmgs(char* str,int* bmgs){
 	int i,j,p;
 	int strlength = strlen(str);
-	int suff[strlength];  //éœ€è¦è¾…åŠ©æ•°ç»„suff[]ï¼Œsuff[]ä¸ºä»¥iä¸ºå³è¾¹ç•Œ, ä¸æ¨¡å¼ä¸²åç¼€åŒ¹é…çš„æœ€å¤§é•¿åº¦
-	suff[strlength-1]=strlength;   //æœ€åä¸€ä¸ªå­—ç¬¦æ˜¾ç„¶suff[]=strlength
+	int suff[strlength];  //ĞèÒª¸¨ÖúÊı×ésuff[]£¬suff[]ÎªÒÔiÎªÓÒ±ß½ç, ÓëÄ£Ê½´®ºó×ºÆ¥ÅäµÄ×î´ó³¤¶È
+	suff[strlength-1]=strlength;   //×îºóÒ»¸ö×Ö·ûÏÔÈ»suff[]=strlength
 	for(i=strlength-2;i>=0;i--){
 		p=i;
 		while(p>=0&&str[p]==str[strlength-1-i+p]){
 			p--;
 		}
-		suff[i]=i-p;  //å¾—åˆ°suff[]
+		suff[i]=i-p;  //µÃµ½suff[]
 	}
 	// puts("suff:");
 	/*for(i=0;i<strlength;i++){
 		printf("suff[%d]%d\n", i,suff[i]);
 	}*/
-	//è®¡ç®—bmgs[]
+	//¼ÆËãbmgs[]
 	// puts("bmgs:");
 	for(j=0;j<strlength;j++){
 		bmgs[j]=strlength-1;		
-	}  //æ²¡æœ‰åŒ¹é…çš„å¥½åç¼€æ—¶ï¼Œç§»åŠ¨çš„è·ç¦»ä¸ºstrlength-1
+	}  //Ã»ÓĞÆ¥ÅäµÄºÃºó×ºÊ±£¬ÒÆ¶¯µÄ¾àÀëÎªstrlength-1
 	for(j=0;j<strlength-1;j++){
-		bmgs[strlength-1-suff[j]]=strlength-1-j;	//å¾—åˆ°bmgs[];	
+		bmgs[strlength-1-suff[j]]=strlength-1-j;	//µÃµ½bmgs[];	
 		//printf("[%d]%d\n",strlength-1-suff[j],strlength-1-j );
 	}
 }
 
 /*
- *BoyerMoore ä¾èµ–å‡½æ•°
- *æ¯”è¾ƒå¥½åç¼€ä¸åå­—ç¬¦æ•°ç»„çš„å¤§å°ï¼Œè¿”å›è¾ƒå¤§çš„é‚£ä¸ªæ•°
+ *BoyerMoore ÒÀÀµº¯Êı
+ *±È½ÏºÃºó×ºÓë»µ×Ö·ûÊı×éµÄ´óĞ¡£¬·µ»Ø½Ï´óµÄÄÇ¸öÊı
 */
 int max(int a,int b){
 	return a>b?a:b;
 }
 
 /*
- *BoyerMoore ç®—æ³•
- *ä¾èµ–å‡½æ•°ï¼šget_bmgs(),get_bmbc(),max();
+ *BoyerMoore Ëã·¨
+ *ÒÀÀµº¯Êı£ºget_bmgs(),get_bmbc(),max();
  *movesteps();
  */
 long match_5(node* head,char* str,long ppos){
-	struct timeval start,end;
-	gettimeofday(&start,NULL);
+	/*struct timeval start,end;
+	gettimeofday(&start,NULL);*/
 	int  i=0,j,k;
-	long pos=1;  //ä»å½“å‰ä½ç½®å¼€å§‹è®¡æ•°ï¼Œç„¶ååŠ ä¸Šä¼ è¿›æ¥çš„èµ·å§‹ä½ç½®ppos
+	long pos=1;  //´Óµ±Ç°Î»ÖÃ¿ªÊ¼¼ÆÊı£¬È»ºó¼ÓÉÏ´«½øÀ´µÄÆğÊ¼Î»ÖÃppos
 	node *cur; 
 	char c;
 	int strlength=strlen(str);
 	int bmbc[128];  
 	int bmgs[strlength];
-	get_bmbc(str,bmbc);   //å¾—åˆ°å¥½åç¼€æ•°ç»„
-	get_bmgs(str,bmgs);   //å¾—åˆ°åå­—ç¬¦æ•°ç»„
+	get_bmbc(str,bmbc);   //µÃµ½ºÃºó×ºÊı×é
+	get_bmgs(str,bmgs);   //µÃµ½»µ×Ö·ûÊı×é
 	/*for(i=0;i<strlength;i++){
 		printf("%c%d ",str[i],bmbc[str[i]] );
 	}
@@ -385,37 +614,44 @@ long match_5(node* head,char* str,long ppos){
 		printf("%3d",bmgs[i] );
 	}*/
 
-	//ä»åå¾€å‰åŒ¹é…ï¼Œæ‰€ä»¥å…ˆå¾€åç§»åŠ¨ä¸€ä¸ªæ¨¡å¼ä¸²çš„é•¿åº¦
+	//´ÓºóÍùÇ°Æ¥Åä£¬ËùÒÔÏÈÍùºóÒÆ¶¯Ò»¸öÄ£Ê½´®µÄ³¤¶È
 	cur = movesteps(head,strlength);
-	if(cur==NULL)
-		return;  //å¦‚æœå·²ç»åˆ°æœ«å°¾äº†ï¼Œåˆ™é€€å‡º
-	j=strlength-1;  //æœ€åä¸€ä¸ªå­—ç¬¦
+	if(cur==NULL){
+		printf("end of file!");	
+		return;  //Èç¹ûÒÑ¾­µ½Ä©Î²ÁË£¬ÔòÍË³ö
+	}
+	j=strlength-1;  //×îºóÒ»¸ö×Ö·û
 	while(j>=0){
 		if(str[j]==cur->ch){
-			cur=cur->pre;  //å¦‚æœåŒ¹é…åˆ™ç»§ç»­å¾€å‰åŒ¹é…å‰ä¸€ä¸ªå­—ç¬¦
+			cur=cur->pre;  //Èç¹ûÆ¥ÅäÔò¼ÌĞøÍùÇ°Æ¥ÅäÇ°Ò»¸ö×Ö·û
 			i++;
 			j--;
 		}
 		else{
-			c=cur->ch;   //ä¸åŒ¹é…æ—¶
-			i+=max(bmbc[str[j]],bmgs[j]); //å¾—åˆ°ç§»åŠ¨è·ç¦»ï¼Œä¸ºå¥½åç¼€ä¸åå­—ç¬¦æ•°ç»„ä¸­è¾ƒå¤§çš„é‚£ä¸ªï¼Œå¹¶åŠ ä¸Šå…ˆå‰å·²ç»åŒ¹é…çš„é‚£æ®µè·ç¦»i
-			pos+=max(bmbc[str[j]],bmgs[j]);  //è·ç¦»è®¡æ•°ï¼Œä¸éœ€è¦åŠ ä¸Ši
-			cur=movesteps(cur,i);		///ç§»åŠ¨åŒ¹é…ä¸²
+			c=cur->ch;   //²»Æ¥ÅäÊ±
+			i+=max(bmbc[str[j]],bmgs[j]); //µÃµ½ÒÆ¶¯¾àÀë£¬ÎªºÃºó×ºÓë»µ×Ö·ûÊı×éÖĞ½Ï´óµÄÄÇ¸ö£¬²¢¼ÓÉÏÏÈÇ°ÒÑ¾­Æ¥ÅäµÄÄÇ¶Î¾àÀëi
+			pos+=max(bmbc[str[j]],bmgs[j]);  //¾àÀë¼ÆÊı£¬²»ĞèÒª¼ÓÉÏi
+			cur=movesteps(cur,i);		///ÒÆ¶¯Æ¥Åä´®
 			if(cur==NULL){
+				printf("end of file!");
 				break;
 			}
 			// putchar(cur->ch);
-			i=0;		//å½’é›¶
-			j=strlength-1; //é‡æ–°ä»æœ«å°¾å¼€å§‹åŒ¹é…
+			i=0;		//¹éÁã
+			j=strlength-1; //ÖØĞÂ´ÓÄ©Î²¿ªÊ¼Æ¥Åä
 		}
 	}
 	if(j<0)
-		printf("  %d / ",pos+ppos);
-	else 
-		printf("no found! / ");
-	gettimeofday(&end,NULL);
+		printf("%d---",pos+ppos);
+	if(cur!=NULL){
+		cur=movesteps(cur,strlength);	
+		match_5(cur,str,pos+ppos+strlength-1);
+	}
+	/*else 
+		printf("end of file! / ");*/
+	/*gettimeofday(&end,NULL);
 	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
-	printf("%f",timeuse/1000000.0);
+	printf("%f",timeuse/1000000.0);*/
 		//printf("find");
 }
 
@@ -429,7 +665,7 @@ void get_b(char* str,int* B){
 	for(i=0;i<strlength;i++){
 		B[str[i]]|=shift;
 		shift<<=1;
-	}  //å¾—åˆ°æ¨¡å¼ä¸²ä¸­å„ä¸ªå­—ç¬¦åœ¨æ¨¡å¼ä¸²ä¸­çš„ä½ç½®ï¼Œç”±ä¸€ä¸ª32ä½çš„äºŒè¿›åˆ¶æ•°æ¥è¡¨ç¤ºï¼Œå­˜åœ¨çš„ä½ç½®ä¸º1ï¼Œä¸å­˜åœ¨ä¸º0
+	}  //µÃµ½Ä£Ê½´®ÖĞ¸÷¸ö×Ö·ûÔÚÄ£Ê½´®ÖĞµÄÎ»ÖÃ£¬ÓÉÒ»¸ö32Î»µÄ¶ş½øÖÆÊıÀ´±íÊ¾£¬´æÔÚµÄÎ»ÖÃÎª1£¬²»´æÔÚÎª0
 	/*
 	for(i=0;i<strlength;i++){
 		printf("%c%x\n",str[i],B[str[i]]);
@@ -437,40 +673,42 @@ void get_b(char* str,int* B){
 }
 
 /* name:Shift-And
- * ä¾èµ–å‡½æ•°ï¼šget_b();
+ * ÒÀÀµº¯Êı£ºget_b();
  */
 long match_6(node* head,char* str,long ppos){
-	struct timeval start,end;
-	gettimeofday(&start,NULL);
+	/*struct timeval start,end;
+	gettimeofday(&start,NULL);*/
 	int i;
-	int B[128]={0};  //åˆå§‹å€¼ä¸º0
+	int B[128]={0};  //³õÊ¼ÖµÎª0
 	long pos=1;
 	int strlength=strlen(str);
-	if(strlength>32){		//å› ä¸ºä½¿ç”¨longç±»å‹æ¥ä¿å­˜Dï¼Œmaskï¼Œæ‰€ä»¥æœ€å¤§çš„åŒ¹é…é•¿åº¦ä¸º32ä½
+	if(strlength>32){		//ÒòÎªÊ¹ÓÃlongÀàĞÍÀ´±£´æD£¬mask£¬ËùÒÔ×î´óµÄÆ¥Åä³¤¶ÈÎª32Î»
 		printf("  over length!");
 		return;
 	}
 	long D=0,mask;
-	mask = 1<<(strlength-1);  //å¾—åˆ°æ ‡å°ºï¼Œå½“Dä¸ä¹‹ç›¸ç­‰çš„æ—¶å€™åˆ™åŒ¹é…æˆåŠŸ
-	node* cur=head->next;
-	get_b(str,B);		//å¾—åˆ°è¾…åŠ©æ•°ç»„B
+	mask = 1<<(strlength-1);  //µÃµ½±ê³ß£¬µ±DÓëÖ®ÏàµÈµÄÊ±ºòÔòÆ¥Åä³É¹¦
+	node* cur=head;
+	get_b(str,B);		//µÃµ½¸¨ÖúÊı×éB
 	while(cur!=NULL){
-		D=(D<<1|1)&B[cur->ch];  //ä¾æ¬¡å¾€åç§»åŠ¨æ¨¡å¼ä¸²ï¼Œå¹¶æ›´æ–°Dçš„æ•°å€¼
+		D=(D<<1|1)&B[cur->ch];  //ÒÀ´ÎÍùºóÒÆ¶¯Ä£Ê½´®£¬²¢¸üĞÂDµÄÊıÖµ
 		cur=cur->next;
 		pos++;
-		if(D&mask)		//å½“Då’Œmaskç›¸ç­‰çš„æ—¶å€™ï¼Œè¯´æ˜åŒ¹é…æˆåŠŸ
+		if(D&mask)		//µ±DºÍmaskÏàµÈµÄÊ±ºò£¬ËµÃ÷Æ¥Åä³É¹¦
 			break;
 	}
 	if(D&mask)
-		printf("  %d / ",pos+ppos-strlength);
+		printf("%d---",pos+ppos-strlength);
+	if(cur!=NULL)
+		match_6(cur,str,pos+ppos-1);
 	else 
-		printf("no found! / ");
-	gettimeofday(&end,NULL);
+		printf("end of file!");
+	/*gettimeofday(&end,NULL);
 	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
-	printf("%f",timeuse/1000000.0);
+	printf("%f",timeuse/1000000.0);*/
 	/* if(cur!=NULL)
 		match_6(cur,str,pos+ppos);
 	else 
 		return;
-	 */  //é€šè¿‡é€’å½’å¯»æ‰¾æ‰€æœ‰åŒ¹é…çš„å­—ç¬¦ä¸²
+	 */  //Í¨¹ıµİ¹éÑ°ÕÒËùÓĞÆ¥ÅäµÄ×Ö·û´®
 }
