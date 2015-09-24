@@ -104,7 +104,7 @@ int main(){
 				// printf("%d\n",cost_p->effective_bf );
 			}
 			break;
-		case 2:    
+		case 2:      //测试最好最坏情况下的时间
 			/*puts("please input the string:");
 			scanf("%s",str);*/
 			// test_times=1;
@@ -113,8 +113,6 @@ int main(){
 			puts("How many character do you want to produce?");  //输入生成文件的大小
 			scanf("%d",&number);
 
-			/*puts("please input the strlength:");  //需要寻找的结点树以及字符串长度
-			scanf("%d",&strlength);*/
 			puts("the default strlength is 30");
 			strlength=30;
 
@@ -122,7 +120,7 @@ int main(){
 			scanf("%d",&steps);
 			steps_save=steps;   //保存test_times的数值
 
-			show_asciikind();
+			show_asciikind();  //输出提示信息，需要测试什么算法的最好最坏情况
 			scanf("%d",&choice);
 
 			switch(choice){
@@ -150,13 +148,12 @@ int main(){
 						cost_p=temp;
 						for(i=0;i<6;i++)
 							time_whole[i]=0;  //重新归零
-						//运行结束，打印花费的时间
 						steps--;
 						strlength+=10;
 					}
 					break;
 				case 3:   //kmp和bm算法的最好最坏情况
-					steps=4;
+					steps=4;  //固定执行四次，看四个不同文件内容下匹配 算法的时间
 					while(steps>0){   
 						place=number-strlength;
 
@@ -543,7 +540,7 @@ void display(node* head,char* str,int findall,cost *cost_p){
 	}
 
 	//输出此次匹配所花的时间
-	/*puts("time_use:");
+	puts("time_use:");
 	puts("algorithm\t|\ttime(s)");
 	puts("-------------------------------------");
 	printf("%s","Brute Force\t|\t");
@@ -562,7 +559,7 @@ void display(node* head,char* str,int findall,cost *cost_p){
 	printf("%f\n",bm_time/1000000.0);
 
 	printf("%s","Shift-And\t|\t");
-	printf("%f\n",shift_time/1000000.0);*/
+	printf("%f\n",shift_time/1000000.0);
 }
 
 void showresult(int test_times,cost *cost_p){
