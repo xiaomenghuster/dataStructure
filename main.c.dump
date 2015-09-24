@@ -185,10 +185,62 @@ int main(){
 					}
 					break;
 				case 4:  //horspool和sunday的最好最坏情况
+					steps=4;
+					while(steps>0){   
+						place=number-strlength;
 
+						temp=(cost*)malloc(sizeof(cost));
+						temp->next=NULL;
+						temp->effective=1;
+						temp->place=place;      //生成一个链表记录信息
+						create_kmp(choice,number,steps,strlength);  //形成字符集文件
+						getstring(place,strlength,str);  //得到目标字符串
+						puts("\nthe string: ");
+						puts(str);   //显示字符串
+
+						if(!(head=(node*)malloc(sizeof(node))))
+							return ERROR;
+						init(head);			//初始化双向链表 
+						display(head,str,findall,temp);  //调用匹配函数
+						puts("");
+						showresult(1,temp);
+						cost_p->next=temp;
+						cost_p=temp;
+						for(i=0;i<6;i++)
+							time_whole[i]=0;  //重新归零
+						//运行结束，打印花费的时间
+						steps--;
+						// strlength+=10;
+					}
 					break;
 				case 5:  //shift的最好最坏情况
+					steps=4;
+					while(steps>0){   
+						place=number-strlength;
 
+						temp=(cost*)malloc(sizeof(cost));
+						temp->next=NULL;
+						temp->effective=1;
+						temp->place=place;      //生成一个链表记录信息
+						create_kmp(choice,number,steps,strlength);  //形成字符集文件
+						getstring(place,strlength,str);  //得到目标字符串
+						puts("\nthe string: ");
+						puts(str);   //显示字符串
+
+						if(!(head=(node*)malloc(sizeof(node))))
+							return ERROR;
+						init(head);			//初始化双向链表 
+						display(head,str,findall,temp);  //调用匹配函数
+						puts("");
+						showresult(1,temp);
+						cost_p->next=temp;
+						cost_p=temp;
+						for(i=0;i<6;i++)
+							time_whole[i]=0;  //重新归零
+						//运行结束，打印花费的时间
+						steps--;
+						// strlength+=10;
+					}
 					break;
 				default: break;
 
@@ -203,11 +255,11 @@ int main(){
 				//等于一表示的确是在指定位置找到的字符串，而不是在那之前的位置找到的
 				if(cost_p->effective==1){
 					switch(choice){
-						case 2: printf("\t%f   ",cost_p->time_bf/1000000.0 );break;
+						case 2: printf("\tkmp:%f   ",cost_p->time_bf/1000000.0 );break;
 						case 3: 
 							printf("\tkmp:%f   bm:%f",cost_p->time_kmp/1000000.0,cost_p->time_bm/1000000.0 );break;
-						case 4: printf("\t%f   %f",cost_p->time_horspool/1000000.0,cost_p->time_sunday );break;
-						case 5: printf("\t%f   ",cost_p->time_shift/1000000.0 );break;
+						case 4: printf("\thorspool:%f   sunday:%f",cost_p->time_horspool/1000000.0,cost_p->time_sunday );break;
+						case 5: printf("\tshift:%f   ",cost_p->time_shift/1000000.0 );break;
 						default: break;
 					}
 					puts("");
@@ -542,7 +594,7 @@ void showresult(int test_times,cost *cost_p){
 	printf("%s", "BoyerMoore\t|\t");
 	time_whole[4]/=test_times;
 	printf("%f\n",time_whole[4]/1000000.0);
-	cost_p->time_bm=time_whole[4]/3;
+	cost_p->time_bm=time_whole[4];
 
 	printf("%s","Shift-And\t|\t");
 	time_whole[5]/=test_times;
