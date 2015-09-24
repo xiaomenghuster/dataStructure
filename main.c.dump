@@ -1,6 +1,6 @@
-/*writor:xiaomenghuster  date:summer
+/*Author:xiaomenghuster  date:summer
  *数据结构课程设计
- *五种字符串匹配算法
+ *六种字符串匹配算法
  *寻找所有匹配的字符串位置，没有则输出no find!
  *shift and 只能寻找32个字符以内的字符串，其他的最多为1000
 */
@@ -32,12 +32,6 @@ int main(){
 	scanf("%d",&iof); 
 	switch(iof){
 		case 1:  
-			/*show_asciikind();  //输出提示信息，“生成何种字符文件类型”
-			printf("your choice: ");
-			scanf("%d",&choice);*/
-
-			choice=1;
-
 			puts("How many character do you want to produce?");  //输入生成文件的大小
 			scanf("%d",&number);
 
@@ -58,25 +52,25 @@ int main(){
 				temp->next=NULL;
 				temp->effective=1;
 				temp->place=place;
-				while(test_times_save>0){   //使用test_time_save保存test_time的数值
-					create(choice,number);  //形成字符集文件
-					getstring(place,strlength,str);  //得到目标字符串
+				while(test_times_save>0){   
+					create(1,number);  //形成字符集文件,默认为0101集
+					getstring(place,strlength,str);  //得到指定位置的目标字符串
 					puts("\nthe string: ");
-					puts(str);   //显示字符串
+					puts(str);   //打印字符串
 					if(!(head=(node*)malloc(sizeof(node))))
 						return ERROR;
 					init(head);			//初始化双向链表 
 					display(head,str,findall,temp);  //调用匹配函数并输出结果
 					puts("");
-					test_times_save--;
+					test_times_save--;  //每个位置进行多次运行计算时间，最后求平均值
 				}
-				showresult(test_times,temp);
+				showresult(test_times,temp);  //显示当前位置的时间平均值，并且存入链表中
 				cost_p->next=temp;
 				cost_p=temp;
 				for(i=0;i<6;i++)
 					time_whole[i]=0;  //重新归零
-				num_node--;
-				test_times_save=test_times;
+				num_node--;  //得到下一个位置
+				test_times_save=test_times; 
 			}
 			//运行结束，打印各个算法对各个位置字符串匹配成功所花费的时间
 			puts("");
@@ -85,7 +79,7 @@ int main(){
 			cost_p=cost_head->next->next; 
 			int j=1;
 			while(cost_p!=NULL){
-				//等于一表示的确是在指定位置找到的字符串，而不是在那之前的位置找到的
+				//等于1表示的确是在指定位置找到的字符串，而不是在那之前的位置找到的
 				printf("%d. ", j);
 				if(cost_p->effective==1){
 					printf("\t%f   ",cost_p->time_bf/1000000.0 );
@@ -98,175 +92,64 @@ int main(){
 				}
 				else 
 					puts("\tnone effective!");
-				//printf("%d\n",cost_p->place );  //检测是否成功建立链表
 				j++;
 				cost_p=cost_p->next;	
-				// printf("%d\n",cost_p->effective_bf );
 			}
 			break;
 		case 2:      //测试最好最坏情况下的时间
-			/*puts("please input the string:");
-			scanf("%s",str);*/
-			// test_times=1;
-			/*show_findall();
-			scanf("%d",&findall);*/
 			puts("How many character do you want to produce?");  //输入生成文件的大小
 			scanf("%d",&number);
 
-			puts("the default strlength is 30");
-			strlength=30;
+			puts("pleast input the strlength:");
+			scanf("%d",&strlength);
 
-		    puts("please input the steps:");   //输入每个位置需要测试的次数
-			scanf("%d",&steps);
-			steps_save=steps;   //保存test_times的数值
+			choice=4;
+			while(choice>0){   
+				place=number-strlength;
 
-			show_asciikind();  //输出提示信息，需要测试什么算法的最好最坏情况
-			scanf("%d",&choice);
+				temp=(cost*)malloc(sizeof(cost));
+				temp->next=NULL;
+				temp->effective=1;
+				temp->place=place;      //生成一个链表记录信息
 
-			switch(choice){
-				case 2:  //bf算法的最好最坏情况
-					while(steps>0){   
-						place=number-strlength;
-
-						temp=(cost*)malloc(sizeof(cost));
-						temp->next=NULL;
-						temp->effective=1;
-						temp->place=place;      //生成一个链表记录信息
-
-						create(choice,number);  //形成字符集文件
-						getstring(place,strlength,str);  //得到目标字符串
-						puts("\nthe string: ");
-						puts(str);   //显示字符串
-
-						if(!(head=(node*)malloc(sizeof(node))))
-							return ERROR;
-						init(head);			//初始化双向链表 
-						display(head,str,findall,temp);  //调用匹配函数
-						puts("");
-						showresult(1,temp);
-						cost_p->next=temp;
-						cost_p=temp;
-						for(i=0;i<6;i++)
-							time_whole[i]=0;  //重新归零
-						steps--;
-						strlength+=10;
-					}
-					break;
-				case 3:   //kmp和bm算法的最好最坏情况
-					steps=4;  //固定执行四次，看四个不同文件内容下匹配 算法的时间
-					while(steps>0){   
-						place=number-strlength;
-
-						temp=(cost*)malloc(sizeof(cost));
-						temp->next=NULL;
-						temp->effective=1;
-						temp->place=place;      //生成一个链表记录信息
-						create_kmp(choice,number,steps,strlength);  //形成字符集文件
-						getstring(place,strlength,str);  //得到目标字符串
-						puts("\nthe string: ");
-						puts(str);   //显示字符串
-
-						if(!(head=(node*)malloc(sizeof(node))))
-							return ERROR;
-						init(head);			//初始化双向链表 
-						display(head,str,findall,temp);  //调用匹配函数
-						puts("");
-						showresult(1,temp);
-						cost_p->next=temp;
-						cost_p=temp;
-						for(i=0;i<6;i++)
-							time_whole[i]=0;  //重新归零
-						//运行结束，打印花费的时间
-						steps--;
-						// strlength+=10;
-					}
-					break;
-				case 4:  //horspool和sunday的最好最坏情况
-					steps=4;
-					while(steps>0){   
-						place=number-strlength;
-
-						temp=(cost*)malloc(sizeof(cost));
-						temp->next=NULL;
-						temp->effective=1;
-						temp->place=place;      //生成一个链表记录信息
-						create_kmp(choice,number,steps,strlength);  //形成字符集文件
-						getstring(place,strlength,str);  //得到目标字符串
-						puts("\nthe string: ");
-						puts(str);   //显示字符串
-
-						if(!(head=(node*)malloc(sizeof(node))))
-							return ERROR;
-						init(head);			//初始化双向链表 
-						display(head,str,findall,temp);  //调用匹配函数
-						puts("");
-						showresult(1,temp);
-						cost_p->next=temp;
-						cost_p=temp;
-						for(i=0;i<6;i++)
-							time_whole[i]=0;  //重新归零
-						//运行结束，打印花费的时间
-						steps--;
-						// strlength+=10;
-					}
-					break;
-				case 5:  //shift的最好最坏情况
-					steps=4;
-					while(steps>0){   
-						place=number-strlength;
-
-						temp=(cost*)malloc(sizeof(cost));
-						temp->next=NULL;
-						temp->effective=1;
-						temp->place=place;      //生成一个链表记录信息
-						create_kmp(choice,number,steps,strlength);  //形成字符集文件
-						getstring(place,strlength,str);  //得到目标字符串
-						puts("\nthe string: ");
-						puts(str);   //显示字符串
-
-						if(!(head=(node*)malloc(sizeof(node))))
-							return ERROR;
-						init(head);			//初始化双向链表 
-						display(head,str,findall,temp);  //调用匹配函数
-						puts("");
-						showresult(1,temp);
-						cost_p->next=temp;
-						cost_p=temp;
-						for(i=0;i<6;i++)
-							time_whole[i]=0;  //重新归零
-						//运行结束，打印花费的时间
-						steps--;
-						// strlength+=10;
-					}
-					break;
-				default: break;
-
+				create(choice,number);  //形成字符集文件
+				getstring(place,strlength,str);  //得到目标字符串
+				puts("\nthe string: ");
+				puts(str);   //显示字符串
+				if(!(head=(node*)malloc(sizeof(node))))
+					return ERROR;
+				init(head);			//初始化双向链表 
+				display(head,str,findall,temp);  //调用匹配函数
+				puts("");
+				showresult(1,temp);  //只需要执行一次，所以只需要执行一次
+				cost_p->next=temp;
+				cost_p=temp;
+				for(i=0;i<6;i++)
+					time_whole[i]=0;  //重新归零
+				choice--;
 			}
-			
+
 			//运行结束，打印花费的时间
 			puts("");
 			puts("the time:");
 			puts("算法最好最差情况的对比：");   
+			puts("Brute Force    KMP\thorspool    Sunday\tBoyer Moore\tshift");
 			cost_p=cost_head->next->next; 
 			while(cost_p!=NULL){
 				//等于一表示的确是在指定位置找到的字符串，而不是在那之前的位置找到的
 				if(cost_p->effective==1){
-					switch(choice){
-						case 2: printf("\tkmp:%f   ",cost_p->time_bf/1000000.0 );break;
-						case 3: 
-							printf("\tkmp:%f   bm:%f",cost_p->time_kmp/1000000.0,cost_p->time_bm/1000000.0 );break;
-						case 4: printf("\thorspool:%f   sunday:%f",cost_p->time_horspool/1000000.0,cost_p->time_sunday );break;
-						case 5: printf("\tshift:%f   ",cost_p->time_shift/1000000.0 );break;
-						default: break;
-					}
+					printf("%f",cost_p->time_bf/1000000.0 );
+					printf("    %f",cost_p->time_kmp/1000000.0);
+					printf("\t%f",cost_p->time_horspool/1000000.0);
+					printf("    %f",cost_p->time_sunday/1000000.0);
+					printf("    %f",cost_p->time_bm/1000000.0);
+					printf("\t%f",cost_p->time_shift/1000000.0);
 					puts("");
 				}
 				else 
 					puts("\tnone effective!");
-				//printf("%d\n",cost_p->place );  //检测是否成功建立链表
 				j++;
 				cost_p=cost_p->next;	
-				// printf("%d\n",cost_p->effective_bf );
 			}
 			break;
 		default: break;
@@ -307,70 +190,12 @@ void show_findall(){
 }
 
 void create(int choice,long number){
-	char c;
-	int kind;
-	long i=0;
-	FILE* fout= fopen(CONTENTFILE,"w");
-	while(i<number){
-		switch(choice){
-			case 1:
-				c=(rand()%9)%2+'0';   //产生随机的01文件而不是伪随机的01文件
-				//putchar(c);
-				fputc(c,fout);
-				break;
-			case 2:
-				c='a';  //生成大量重复的字符，增加匹配所需要的时间
-				if(i==number-2)
-					c='b';
-				// putchar(c);
-				fputc(c,fout);
-				break;
-			case 3:
-				c=rand()%93+33;  //随机生成ascii码中可以显示的所有字符
-				// putchar(c);
-				fputc(c,fout);
-				if(i==number-2)
-					c='d';
-				break;
-			case 4:
-				kind=rand()%3+1;
-				switch(kind){
-					case 1:
-						c=rand()%10+'0';
-						break;
-					case 2:
-						c=rand()%26+'a';
-						break;
-					case 3:
-						c=rand()%26+'A';
-						break;
-					default:
-						break;
-				}
-				fputc(c,fout);
-				break;
-			case 5:
-				c=rand()%93+33;  //随机生成ascii码中可以显示的所有字符
-				// putchar(c);
-				fputc(c,fout);
-				break;
-			default:
-				break;
-		}
-		/*if(!(i%10000))
-			fputc('\n',fout);*/
-		i++;
-	}
-	fclose(fout);
-}
-
-void create_kmp(int choice,long number,int steps,int strlength){
 	char c='a';
 	int kind;
 	long i=0;
 	FILE* fout= fopen(CONTENTFILE,"w");
 	while(i<number){
-		switch(steps){
+		switch(choice){
 			case 1:
 				c=(rand()%9)%2+'0';   //产生随机的01文件而不是伪随机的01文件
 				//putchar(c);
@@ -406,11 +231,11 @@ void create_kmp(int choice,long number,int steps,int strlength){
 			default:
 				break;
 		}
-		i++;
-		if(i==number-2){
+		if(i==number-3){
 			c='/';
 			fputc(c,fout);
 		}
+		i++;
 	}
 	fclose(fout);
 }
@@ -463,7 +288,7 @@ void show(node* h){   //显示双向链表，测试生成情况
 	/* while(h->pre!=NULL){
 		putchar(h->ch);
 		h=h->pre;
-	} */
+	} */  //检测是否正确生成了双向链表
 }
 
 void display(node* head,char* str,int findall,cost *cost_p){
@@ -597,12 +422,6 @@ void showresult(int test_times,cost *cost_p){
 	time_whole[5]/=test_times;
 	printf("%f\n",time_whole[5]/1000000.0);
 	cost_p->time_shift=time_whole[5];
-
-	/*cost *temp;	
-	temp=(cost*)malloc(sizeof(cost));  //保存当前位置匹配所花时间的平均值，与其他位置作比较
-	temp->next=NULL;
-	cost_p->next=temp;
-	return temp;*/
 }
 
 
@@ -611,8 +430,6 @@ void showresult(int test_times,cost *cost_p){
  */
 
 long match_1(node* head,char* str,long ppos,int findall,cost *cost_p){
-	/*struct timeval start,end;
-	gettimeofday(&start,NULL);  //得到开始时间*/
   	int  j=0;
 	long pos=0;
 	node *cur,*pre;
@@ -646,9 +463,6 @@ long match_1(node* head,char* str,long ppos,int findall,cost *cost_p){
 		match_1(cur,str,ppos+pos+strlength,findall,cost_p);
 	else if(findall) 
 	 	printf("end of file!");
-	/*gettimeofday(&end,NULL);  //得到结束时间
-	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;  //计算经过的时间
-	printf("%f",timeuse/1000000.0);*/
 }
 
 void get_next(char* str,int* next){
@@ -658,7 +472,6 @@ void get_next(char* str,int* next){
 	int strlength = strlen(str);//得到字符串的长度
 	char str_2[strlength+2]; //需要依次后移一位，并且考虑结束符，所以长度是srelentgth+2
 	while(str_2[k+1]=str[k]){  //依次后移
-		// putchar(str[k]);
 		k++;
 	}
 	while(i<strlength){
@@ -666,7 +479,6 @@ void get_next(char* str,int* next){
 			i++;
 			j++;
 			next[i]=j;
-			// printf("%d ",next[i]);
 		}
 		else 
 			j=next[j];
@@ -679,9 +491,6 @@ void get_next(char* str,int* next){
  *依赖函数：get_next();
 */
 long match_2(node* head,char* str,long ppos,int findall){
-	// puts(str);
-	/*struct timeval start,end;
-	gettimeofday(&start,NULL);*/
 	int i=0,j=1;
 	long pos=0;  //记录累计移动的距离，加上传进来的参数ppos，就是模式串在匹配串中的位置
 	node *cur,*pre;
@@ -707,9 +516,6 @@ long match_2(node* head,char* str,long ppos,int findall){
 		match_2(cur,str,pos+ppos,findall);
 	else if(findall)
 		printf("end of file!");
-	/*gettimeofday(&end,NULL);
-	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
-	printf("%f",timeuse/1000000.0);*/
 }
 
 /*
@@ -729,8 +535,6 @@ node* movesteps(node* head,int steps){
  * 依赖函数：movesteps();
  */
 long match_3(node* head,char* str,long ppos,int findall){
-	/*struct timeval start,end;
-	gettimeofday(&start,NULL);*/
 	int  i=0,j,k;
 	long pos=1;  
 	node *cur;  
@@ -771,71 +575,12 @@ long match_3(node* head,char* str,long ppos,int findall){
 	}
 	else if(findall)
 		printf("end of file!");
-	/*gettimeofday(&end,NULL);
-	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
-	printf("%f",timeuse/1000000.0);*/
-	/* if(cur!=NULL)
-		match_3(cur->next,str,pos+ppos);
-	else 
-		return; */
 }
 
 /* name:Sunday
  * 依赖函数movesteps();
  */
 
-/*long match_4(node* head,char* str,long ppos,int findall){
-	//puts(str);
-	int  i=0,j=0;
-	long pos=1;  
-	node *cur,*cur_save,*next;  
-	char c;
-	int strlength=strlen(str);
-	//puts(str);
-	// printf("%d\n",strlength);
-	if(strlength>1000){
-		printf("  over length!");
-		return;
-	}
-	cur=(node*)malloc(sizeof(node));
-	cur=head->next;
-	next=(node*)malloc(sizeof(node));
-	cur_save=(node*)malloc(sizeof(node));
-	// putchar(cur->ch);
-	while(j<strlength&&cur!=NULL){
-		if(str[j]==cur->ch){
-			cur=cur->next;  
-			i++;
-			j++;
-			pos++;
-		}
-		else{
-			cur_save=cur;
-			next = movesteps(cur,strlength-i);  //出现失配时，匹配串后移一位，然后在模式串中寻找最右边与下一个字符相同的字符的位置
-			if(next==NULL){
-				cur=NULL;
-				break;   //如果到末尾则退出
-			}
-			j=strlength-1;
-			while(j>=0&&str[j]!=next->ch){
-				j--;
-			} //在模式串中寻找最右边与匹配串中下一个字符相同的字符的位置
-			cur=movesteps(cur_save,strlength-j); //重新对齐然后开始从左往右匹配
-			pos+=strlength-j;
-			i=0;
-			j=0;
-		}
-	}
-	
-	if(j==strlength)
-		printf("%d---",pos+ppos-strlength);
-	if(cur!=NULL&&findall){
-		match_4(cur->pre->pre,str,pos+ppos-2,findall);
-	}
-	else if(findall)
-		printf("end of file!");    //不能全部匹配成功
-}
-*/
 long match_4(node* head,char* str,long ppos,int findall){
 	int  i=0,j,k;
 	long pos=1;  
@@ -914,12 +659,6 @@ void get_bmgs(char* str,int* bmgs){
 		}
 		suff[i]=i-p;  //得到suff[]
 	}
-	// puts("suff:");
-	/*for(i=0;i<strlength;i++){
-		printf("suff[%d]%d\n", i,suff[i]);
-	}*/
-	//计算bmgs[]
-	// puts("bmgs:");
 	for(j=0;j<strlength;j++){
 		bmgs[j]=strlength-1;		
 	}  //没有匹配的好后缀时，移动的距离为strlength-1
@@ -943,8 +682,6 @@ int max(int a,int b){
  *movesteps();
  */
 long match_5(node* head,char* str,long ppos,int findall){
-	/*struct timeval start,end;
-	gettimeofday(&start,NULL);*/
 	int  i=0,j,k;
 	long pos=1;  //从当前位置开始计数，然后加上传进来的起始位置ppos
 	node *cur; 
@@ -954,15 +691,6 @@ long match_5(node* head,char* str,long ppos,int findall){
 	int bmgs[strlength];
 	get_bmbc(str,bmbc);   //得到好后缀数组
 	get_bmgs(str,bmgs);   //得到坏字符数组
-	/*for(i=0;i<strlength;i++){
-		printf("%c%d ",str[i],bmbc[str[i]] );
-	}
-	puts(" ");
-	for(i=0;i<strlength;i++){
-		printf("%3d",bmgs[i] );
-	}*/
-
-	//从后往前匹配，所以先往后移动一个模式串的长度
 	cur = movesteps(head,strlength);
 	if(cur==NULL){
 		printf("end of file!");	
@@ -995,12 +723,6 @@ long match_5(node* head,char* str,long ppos,int findall){
 		cur=movesteps(cur,strlength);	
 		match_5(cur,str,pos+ppos+strlength-1,findall);
 	}
-	/*else 
-		printf("end of file! / ");*/
-	/*gettimeofday(&end,NULL);
-	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
-	printf("%f",timeuse/1000000.0);*/
-		//printf("find");
 }
 
 
@@ -1014,10 +736,6 @@ void get_b(char* str,int* B){
 		B[str[i]]|=shift;
 		shift<<=1;
 	}  //得到模式串中各个字符在模式串中的位置，由一个32位的二进制数来表示，存在的位置为1，不存在为0
-	/*
-	for(i=0;i<strlength;i++){
-		printf("%c%x\n",str[i],B[str[i]]);
-	}*/
 }
 
 /* name:Shift-And
@@ -1051,12 +769,4 @@ long match_6(node* head,char* str,long ppos,int findall){
 		match_6(cur,str,pos+ppos-1,findall);
 	else if(findall)
 		printf("end of file!");
-	/*gettimeofday(&end,NULL);
-	long timeuse=1000000*(end.sec-start.sec)+end.usec-start.usec;
-	printf("%f",timeuse/1000000.0);*/
-	/* if(cur!=NULL)
-		match_6(cur,str,pos+ppos);
-	else 
-		return;
-	 */  //通过递归寻找所有匹配的字符串
 }
